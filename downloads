@@ -1,0 +1,3330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normativos e Referências</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Mammoth.js para processamento de documentos Word -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    
+    <style>
+        :root {
+            /* Microsoft Colors */
+            --ms-blue: #0078d4;
+            --ms-light-blue: #50e6ff;
+            --ms-dark-blue: #005a9e;
+            --ms-grey: #737373;
+            --ms-light-grey: #f2f2f2;
+            --ms-dark-grey: #2f2f2f;
+            --ms-yellow: #ffb900;
+            --ms-green: #107c10;
+            --ms-red: #d13438;
+            
+            /* Text & Background Colors */
+            --text-primary: #323130;
+            --text-secondary: #605e5c;
+            --background-light: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f5f5f5 !important;
+                --text-secondary: #cccccc !important;
+                --background-light: #2f2f2f !important;
+                --shadow-color: rgba(0, 0, 0, 0.4) !important;
+                --ms-light-grey: #404040 !important;
+            }
+            
+            body {
+                background-color: #1a1a1a !important;
+                color: var(--text-primary) !important;
+            }
+            
+            .faq-header, .faq-container, .search-container, .question-header, 
+            .file-upload-container {
+                background-color: var(--background-light) !important;
+                color: var(--text-primary) !important;
+                border-color: #555 !important;
+            }
+            
+            .search-container input {
+                background-color: var(--background-light) !important;
+                color: var(--text-primary) !important;
+                border-color: #555 !important;
+            }
+            
+            .search-container .search-btn {
+                background-color: var(--ms-blue) !important;
+                color: white !important;
+            }
+            
+            #file-upload {
+                background-color: var(--background-light) !important;
+                color: var(--text-primary) !important;
+                border-color: #555 !important;
+            }
+            
+            .question-header:hover {
+                background-color: var(--ms-light-grey) !important;
+            }
+            
+            .faq-item {
+                border-color: #555 !important;
+            }
+            
+            .keyboard-shortcuts {
+                background-color: var(--background-light) !important;
+                border-color: #555 !important;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--ms-light-grey);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--ms-blue);
+            color: white;
+            padding: 1.5rem 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .faq-header {
+            background-color: var(--background-light);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        
+        .search-container {
+            background-color: var(--background-light);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 2px 6px var(--shadow-color);
+        }
+        
+        .search-container input {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 16px 20px;
+            font-size: 16px;
+            outline: none;
+            border-radius: 4px 0 0 4px;
+            color: var(--text-primary);
+            background-color: var(--background-light);
+        }
+        
+        .search-container .search-btn {
+            padding: 0 20px;
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        
+        .search-container .search-btn:hover {
+            background-color: var(--ms-dark-blue);
+        }
+        
+        .faq-container {
+            background-color: var(--background-light);
+            border-radius: 6px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            margin-bottom: 3rem;
+        }
+        
+        .faq-section {
+            padding: 1.5rem;
+        }
+        
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--ms-blue);
+            font-size: 1.25rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .question-header {
+            background-color: var(--background-light);
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+        }
+        
+        .question-header:hover {
+            background-color: var(--ms-light-grey);
+        }
+        
+        .question-header i {
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.expanded .question-header i {
+            transform: rotate(180deg);
+        }
+        
+        /* Estilos para títulos clicáveis */
+        .question-text {
+            flex: 1;
+            padding-right: 1rem;
+        }
+        
+        /* Botão de link externo */
+        .external-link-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            margin-right: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+        }
+        
+        .external-link-btn:hover {
+            background-color: rgba(0, 120, 212, 0.1);
+        }
+        
+        .external-link-btn i {
+            font-size: 16px;
+            color: var(--ms-blue);
+            transition: all 0.2s ease;
+        }
+        
+        .external-link-btn:hover i {
+            color: var(--ms-dark-blue);
+            transform: scale(1.1);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .external-link-btn i {
+                color: var(--ms-light-blue) !important;
+            }
+            
+            .external-link-btn:hover i {
+                color: #ffffff !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .external-link-btn {
+                padding: 6px;
+                min-width: 28px;
+                height: 28px;
+            }
+            
+            .external-link-btn i {
+                font-size: 14px;
+            }
+        }
+        
+        .answer {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .faq-item.expanded .answer {
+            max-height: 80vh;
+            padding: 1rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .answer::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .answer::-webkit-scrollbar-track {
+            background: var(--ms-light-grey);
+            border-radius: 4px;
+        }
+        
+        .answer::-webkit-scrollbar-thumb {
+            background: var(--ms-grey);
+            border-radius: 4px;
+        }
+        
+        .answer::-webkit-scrollbar-thumb:hover {
+            background: var(--ms-dark-blue);
+        }
+        
+        .answer {
+            scrollbar-width: thin;
+            scrollbar-color: var(--ms-grey) var(--ms-light-grey);
+        }
+        
+        .answer div {
+            white-space: pre-wrap;
+        }
+        
+        .answer ul, .answer ol {
+            padding-left: 2rem;
+            margin: 0.5rem 0;
+        }
+        
+        .answer li {
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+        
+        .answer ul ul, 
+        .answer ol ol,
+        .answer ul ol,
+        .answer ol ul {
+            margin-top: 0.25rem;
+        }
+        
+        .answer [data-list-level="1"] { margin-left: 1.5em; }
+        .answer [data-list-level="2"] { margin-left: 3em; }
+        .answer [data-list-level="3"] { margin-left: 4.5em; }
+        .answer [data-list-level="4"] { margin-left: 6em; }
+        .answer [data-list-level="5"] { margin-left: 7.5em; }
+        
+        .answer p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .answer p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--ms-light-grey);
+            border-top: 4px solid var(--ms-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .highlight {
+            background-color: var(--ms-yellow);
+            padding: 0 2px;
+        }
+        
+        /* Mobile-first responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 0.5rem 0;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .logo i {
+                font-size: 1.4rem;
+            }
+            
+            .admin-login {
+                font-size: 0.9rem;
+            }
+            
+            .faq-header {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                margin: 0 10px;
+            }
+            
+            .search-container input {
+                width: 100%;
+                border-radius: 4px 4px 0 0;
+                padding: 18px 20px;
+                font-size: 16px;
+            }
+            
+            .search-container .search-btn {
+                width: 100%;
+                padding: 18px;
+                border-radius: 0 0 4px 4px;
+                font-size: 16px;
+            }
+            
+            .file-upload-container {
+                flex-direction: column;
+                margin: 1rem 10px;
+                padding: 1rem;
+                gap: 15px;
+            }
+            
+            .file-upload-container label {
+                margin-bottom: 0;
+                margin-right: 0;
+            }
+            
+            #file-upload {
+                margin: 10px 0;
+            }
+            
+            .upload-btn {
+                width: 100%;
+                padding: 15px;
+                margin-left: 0;
+                font-size: 16px;
+                min-height: 44px;
+            }
+            
+            .faq-container {
+                margin: 0 10px 2rem 10px;
+            }
+            
+            .faq-section {
+                padding: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .question-header {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .question-text {
+                width: 100%;
+                padding-right: 0;
+            }
+            
+            .question-header > div:last-child {
+                align-self: flex-end;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .favorite-btn {
+                min-width: 44px;
+                height: 44px;
+                padding: 12px;
+            }
+            
+            .favorite-btn i {
+                font-size: 20px;
+            }
+            
+            .answer {
+                padding: 0 1rem;
+            }
+            
+            .faq-item.active .answer {
+                padding: 1rem;
+            }
+            
+            .navigation-simple > div {
+                flex-direction: column;
+                gap: 15px;
+                padding: 1rem 10px;
+            }
+            
+            .favorites-main-toggle {
+                width: 100%;
+                min-width: auto;
+                height: 50px;
+                font-size: 16px;
+                justify-content: center;
+            }
+            
+            .status-message {
+                margin: 1rem 10px;
+                padding: 1rem;
+                font-size: 14px;
+            }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+                font-size: 1.3rem;
+            }
+            
+            .search-container {
+                margin: 0 15px;
+            }
+            
+            .search-container input {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+            
+            .search-container .search-btn {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+            
+            .file-upload-container {
+                flex-direction: column;
+                margin: 1rem 15px;
+                gap: 15px;
+            }
+            
+            .file-upload-container label {
+                margin-bottom: 0;
+                margin-right: 0;
+            }
+            
+            .upload-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                min-height: 44px;
+            }
+            
+            .faq-container {
+                margin: 0 15px 2rem 15px;
+            }
+            
+            .navigation-simple > div {
+                flex-wrap: wrap;
+                gap: 15px;
+                padding: 1rem 15px;
+            }
+            
+            .favorites-main-toggle {
+                flex: 1;
+                min-width: 200px;
+                height: 48px;
+            }
+        }
+        
+        .status-message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+        
+        .status-message.error {
+            background-color: rgba(209, 52, 56, 0.1);
+            color: var(--ms-red);
+            border: 1px solid var(--ms-red);
+        }
+        
+        .status-message.success {
+            background-color: rgba(16, 124, 16, 0.1);
+            color: var(--ms-green);
+            border: 1px solid var(--ms-green);
+        }
+        
+        .status-message.info {
+            background-color: rgba(0, 120, 212, 0.1);
+            color: var(--ms-blue);
+            border: 1px solid var(--ms-blue);
+        }
+        
+        .file-upload-container {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 1rem;
+            background-color: var(--background-light);
+            border-radius: 4px;
+            box-shadow: 0 2px 6px var(--shadow-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-upload-container label {
+            flex: 1;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        .file-upload-container .file-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        #file-upload {
+            flex: 2;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .upload-btn {
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--ms-dark-blue);
+        }
+        
+        .upload-btn:disabled {
+            background-color: var(--ms-grey);
+            cursor: not-allowed;
+        }
+        
+        .retry-github-btn {
+            background-color: var(--ms-green);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .retry-github-btn:hover {
+            background-color: #0e6b0e;
+        }
+        
+        .retry-github-btn:disabled {
+            background-color: var(--ms-grey);
+            cursor: not-allowed;
+        }
+        
+        /* Sistema de Favoritos */
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+        }
+        
+        .favorite-btn:hover {
+            background-color: rgba(0, 120, 212, 0.1);
+        }
+        
+        .favorite-btn i {
+            font-size: 18px;
+            color: var(--ms-grey);
+            transition: all 0.2s ease;
+        }
+        
+        .favorite-btn.favorited i {
+            color: var(--ms-yellow);
+            transform: scale(1.1);
+        }
+        
+        .favorite-btn:hover i {
+            color: var(--ms-blue);
+        }
+        
+        .favorite-btn.favorited:hover i {
+            color: #ffcc00;
+        }
+        
+        .faq-item.is-favorite {
+            border-left: 4px solid var(--ms-yellow);
+        }
+        
+        .favorites-counter {
+            background-color: var(--ms-yellow);
+            color: var(--ms-dark-grey);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        @keyframes favoriteAdded {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1.1); }
+        }
+        
+        .favorite-btn.just-favorited i {
+            animation: favoriteAdded 0.3s ease;
+        }
+        
+        .favorites-empty {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .favorites-empty i {
+            font-size: 3rem;
+            color: var(--ms-grey);
+            margin-bottom: 1rem;
+        }
+        
+        .favorites-empty h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .favorite-btn {
+                padding: 6px;
+                min-width: 28px;
+                height: 28px;
+            }
+            
+            .favorite-btn i {
+                font-size: 16px;
+            }
+        }
+        
+        .favorites-main-toggle {
+            padding: 0 20px;
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
+            min-width: 200px;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .favorites-main-toggle:hover {
+            background-color: var(--ms-dark-blue);
+        }
+        
+        .favorites-main-toggle i {
+            font-size: 18px;
+        }
+        
+        .show-all-faqs-button {
+            padding: 0 20px;
+            background-color: var(--ms-green);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
+            min-width: 200px;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .show-all-faqs-button:hover {
+            background-color: #0e6b0e;
+        }
+        
+        .show-all-faqs-button i {
+            font-size: 18px;
+        }
+        
+        .print-favorites-button {
+            padding: 0 20px;
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
+            min-width: 200px;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .print-favorites-button:hover {
+            background-color: var(--ms-dark-blue);
+        }
+        
+        .print-favorites-button i {
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .favorites-main-toggle, .show-all-faqs-button, .print-favorites-button {
+                padding: 12px 16px;
+                font-size: 14px;
+                min-width: 180px;
+                height: 44px;
+            }
+            
+            .favorites-main-toggle i, .show-all-faqs-button i, .print-favorites-button i {
+                font-size: 16px;
+            }
+        }
+        
+        .help-fab {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 100;
+        }
+        
+        .help-fab:hover {
+            background-color: var(--ms-dark-blue);
+            transform: scale(1.1);
+        }
+        
+        .keyboard-shortcuts {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--background-light);
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .keyboard-shortcuts.visible {
+            display: block;
+        }
+        
+        .shortcuts-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--ms-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .shortcuts-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 12px;
+        }
+        
+        .shortcut-key {
+            background-color: var(--ms-light-grey);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+        
+        .shortcut-desc {
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .keyboard-shortcuts {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            
+            .help-fab {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+        }
+        
+        /* Sistema de Categorias Colapsáveis */
+        .categories-overview {
+            background-color: var(--background-light);
+            border-radius: 6px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+        
+        .categories-grid {
+            padding: 2rem;
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr 1fr;
+            max-width: 95%;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .category-card {
+            background-color: var(--background-light);
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border-color: var(--ms-blue);
+        }
+        
+        .category-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+        
+        .category-header:hover {
+            background: linear-gradient(135deg, var(--ms-light-grey), #ffffff);
+        }
+        
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--ms-blue), var(--ms-dark-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        
+        .category-number {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            line-height: 1;
+        }
+        
+        .category-label {
+            font-weight: 500;
+            font-size: 0.65rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            line-height: 1;
+            opacity: 0.9;
+            text-transform: lowercase;
+        }
+        
+        .category-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .category-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .category-toggle {
+            width: 32px;
+            height: 32px;
+            background-color: var(--ms-light-grey);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+        
+        .category-toggle i {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+        
+        .category-card.expanded .category-toggle {
+            background-color: var(--ms-blue);
+            color: white;
+        }
+        
+        .category-card.expanded .category-toggle i {
+            transform: rotate(180deg);
+        }
+        
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background-color: var(--background-light);
+            opacity: 0;
+        }
+        
+        .category-card.expanded {
+            grid-column: 1 / -1;
+        }
+        
+        .category-card.expanded .category-content {
+            max-height: 5000px;
+            border-top: 1px solid #e9ecef;
+            opacity: 1;
+        }
+        
+        .category-content .faq-list {
+            padding: 1.5rem;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .category-card:not(.expanded) .category-content .faq-list {
+            opacity: 0;
+        }
+        
+        .category-card.expanded .category-content .faq-list {
+            opacity: 1;
+        }
+        
+        .category-content .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        
+        .category-content .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        /* Vista Dedicada de Categoria */
+        .category-dedicated-view {
+            background-color: var(--background-light);
+            border-radius: 6px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+        
+        .dedicated-header {
+            background: linear-gradient(135deg, var(--ms-blue), var(--ms-dark-blue));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .dedicated-info h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dedicated-count {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .dedicated-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .expand-all-dedicated-btn, .collapse-all-dedicated-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .expand-all-dedicated-btn:hover, .collapse-all-dedicated-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .dedicated-content {
+            background-color: var(--background-light);
+            padding: 2rem;
+        }
+        
+        .dedicated-content .faq-list {
+            width: 100%;
+        }
+        
+        .dedicated-content .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e1e1e1;
+            padding-bottom: 1.5rem;
+        }
+        
+        .dedicated-content .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr !important;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .category-card.expanded {
+                grid-column: 1;
+            }
+            
+            .category-header {
+                padding: 1rem;
+            }
+            
+            .category-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .category-name {
+                font-size: 1rem;
+            }
+            
+            .dedicated-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            
+            .dedicated-info h2 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .dedicated-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            
+            .expand-all-dedicated-btn, .collapse-all-dedicated-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+            }
+            
+            .dedicated-content {
+                padding: 1rem;
+            }
+            
+            .category-content .faq-list {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .category-info {
+                gap: 0.75rem;
+            }
+            
+            .category-details {
+                gap: 0.1rem;
+            }
+            
+            .category-name {
+                font-size: 0.95rem;
+                line-height: 1.3;
+            }
+            
+            .category-count {
+                font-size: 0.8rem;
+            }
+            
+            .category-toggle {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .category-toggle i {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Dark mode para categorias */
+        @media (prefers-color-scheme: dark) {
+            .category-card {
+                background-color: var(--background-light) !important;
+                border-color: #555 !important;
+            }
+            
+            .category-header {
+                background: linear-gradient(135deg, var(--background-light), var(--ms-light-grey)) !important;
+                border-color: #555 !important;
+            }
+            
+            .category-name {
+                color: var(--text-primary) !important;
+            }
+            
+            .category-count {
+                color: var(--text-secondary) !important;
+            }
+            
+            .category-toggle {
+                background-color: var(--ms-light-grey) !important;
+                color: var(--text-secondary) !important;
+            }
+            
+            .category-content {
+                background-color: var(--background-light) !important;
+            }
+            
+            .category-content .faq-item {
+                border-color: #555 !important;
+            }
+            
+            .category-dedicated-view {
+                background-color: var(--background-light) !important;
+            }
+            
+            .dedicated-content {
+                background-color: var(--background-light) !important;
+            }
+            
+            .dedicated-content .faq-item {
+                border-color: #555 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="ri-question-answer-line"></i>
+                <span>Normativos e Referências</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Container de upload de arquivo -->
+    <div class="container" style="padding-top: 1.5rem;">
+        <div class="file-upload-container" id="file-upload-container">
+            <div style="flex: 1;">
+                <label for="file-upload">
+                    Upload Base de Dados (.docx):
+                </label>
+                <div class="file-info">
+                    💡 O sistema tenta carregar automaticamente do GitHub primeiro
+                </div>
+            </div>
+            <input type="file" id="file-upload" accept=".docx">
+            <button id="upload-btn" class="upload-btn">Carregar Manual</button>
+            <button id="retry-github-btn" class="retry-github-btn" style="display: none;">
+                <i class="ri-refresh-line"></i> Tentar GitHub
+            </button>
+        </div>
+    </div>
+    
+    <section class="faq-header">
+        <div class="container">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Digite o que procura aqui..." autofocus>
+                <button class="search-btn" id="search-btn">
+                    <i class="ri-search-line"></i> Pesquisar
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <main class="container">
+        <div id="status-message" class="status-message"></div>
+        
+        <!-- Navegação Simplificada - Menu e Favoritos -->
+        <div class="navigation-simple" id="navigation-simple" style="display: none;">
+            <div style="padding: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap;">
+
+                <button class="favorites-main-toggle" id="favorites-main-toggle">
+                    <i class="ri-star-line"></i>
+                    Meus Favoritos
+                    <span class="favorites-counter" id="main-favorites-counter">0</span>
+                </button>
+                <button class="show-all-faqs-button" id="show-all-faqs-button" style="display: none;" onclick="showAllFAQsButton()">
+                    <i class="ri-home-3-line"></i>
+                    Todos
+                </button>
+                <button class="print-favorites-button" id="print-favorites-button" style="display: none;" onclick="printFavorites()">
+                    <i class="ri-printer-line"></i>
+                    Imprimir Favoritos
+                </button>
+            </div>
+        </div>
+        
+        <div class="faq-container" id="faq-results">
+            <div class="loading-container" id="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Atalhos de Teclado -->
+    <div class="keyboard-shortcuts" id="keyboard-shortcuts">
+        <div class="shortcuts-header">
+            <span>Atalhos de Teclado</span>
+            <button class="shortcuts-close" onclick="hideKeyboardShortcuts()" title="Fechar">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Buscar</span>
+            <span class="shortcut-key">Ctrl + K</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-desc">Ajuda</span>
+            <span class="shortcut-key">F1</span>
+        </div>
+    </div>
+    
+    <!-- Botão Flutuante de Ajuda -->
+    <button class="help-fab" onclick="showKeyboardShortcuts()" title="Atalhos de Teclado (F1)">
+        <i class="ri-question-line"></i>
+    </button>
+
+    <script>
+        // ✅ CONFIGURAÇÃO MELHORADA com múltiplas URLs e fallbacks
+        const CONFIG = {
+            autoLoad: true, // Se deve tentar carregar automaticamente
+            fallbackUrls: [
+                "./data/normativosereferencias.docx", // Arquivo local no mesmo domínio (sem CORS)
+                "data/normativosereferencias.docx", // Caminho relativo alternativo
+                "https://cdn.jsdelivr.net/gh/marcioslopes/faq@main/data/normativosereferencias.docx", // jsDelivr CDN
+                "https://raw.githubusercontent.com/marcioslopes/faq/main/data/normativosereferencias.docx" // GitHub Raw
+            ],
+            fallbackToManual: true, // Se deve mostrar upload manual em caso de falha
+            retryAttempts: 3, // Número de tentativas antes do fallback
+            retryDelay: 1500, // Delay entre tentativas (ms)
+            timeout: 20000 // Timeout aumentado para 20 segundos
+        };
+        
+        let autoLoadAttempted = false;
+        let currentUrlIndex = 0; // Para controlar qual URL está sendo testada
+
+        // Categorias predefinidas conforme especificação
+        const predefinedCategories = [
+            {"id": "Normativos", "name": "Normativos"},
+            {"id": "Referências", "name": "Referências"}
+        ];
+        
+        // Elementos do DOM
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const faqResults = document.getElementById('faq-results');
+        const loading = document.getElementById('loading');
+        const statusMessage = document.getElementById('status-message');
+        const fileUpload = document.getElementById('file-upload');
+        const uploadBtn = document.getElementById('upload-btn');
+        
+        // Estado
+        let faqs = [];
+        let categories = predefinedCategories;
+        let activeCategory = null;
+        let favorites = [];
+        let showingFavorites = false;
+        let navigationSimple = null;
+        
+        // Mapa de sinônimos e correções comuns
+        const synonymMap = {
+            'gestor': ['gestor', 'responsavel', 'administrador'],
+            'fiscal': ['fiscal', 'fiscalizador', 'fiscalizacao', 'supervisor'],
+            'contrato': ['contrato', 'acordo', 'ajuste'],
+            'licitacao': ['licitacao', 'licitação', 'licitar', 'certame'],
+            'pregao': ['pregao', 'pregão'],
+            'dispensa': ['dispensa', 'dispensar'],
+            'inexigibilidade': ['inexigibilidade', 'inexigivel', 'inexigível'],
+            'srp': ['srp', 'registro de precos', 'registro de preços', 'ata de registro'],
+            'dfd': ['dfd', 'documento de formalizacao', 'formalizacao da demanda'],
+            'etp': ['etp', 'estudo tecnico preliminar', 'estudo preliminar'],
+            'tr': ['tr', 'termo de referencia', 'termo de referência'],
+            'preco': ['preco', 'preço', 'valor', 'custo'],
+            'servico': ['servico', 'serviço', 'prestacao'],
+            'bem': ['bem', 'produto', 'material'],
+            'modalidade': ['modalidade', 'modo'],
+            'criterio': ['criterio', 'critério', 'parametro', 'regra']
+        };
+        
+        // Variável para controlar se localStorage está disponível
+        let localStorageAvailable = false;
+        let hasShownStorageWarning = false;
+        
+        // ✅ VERIFICAÇÃO DE CONECTIVIDADE MELHORADA
+        async function checkConnectivity() {
+            try {
+                // Teste básico de conectividade
+                const response = await fetch('https://cdn.jsdelivr.net/npm/axios@1.6.0/package.json', {
+                    method: 'HEAD',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                return response.ok;
+            } catch {
+                try {
+                    // Fallback no-cors
+                    await fetch('https://www.google.com/favicon.ico', {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        cache: 'no-cache'
+                    });
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        }
+        
+        // ✅ FUNÇÃO PARA TENTAR DOWNLOAD COM DIFERENTES ESTRATÉGIAS
+        async function tryFetchWithFallbacks(url, urlType) {
+            const strategies = [
+                // Estratégia 1: CORS normal
+                {
+                    mode: 'cors',
+                    credentials: 'omit',
+                    headers: {
+                        'Accept': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/octet-stream,*/*',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                },
+                // Estratégia 2: CORS com headers mínimos
+                {
+                    mode: 'cors',
+                    credentials: 'omit',
+                    headers: {
+                        'Accept': '*/*'
+                    }
+                },
+                // Estratégia 3: no-cors (só para verificar se o arquivo existe)
+                {
+                    mode: 'no-cors',
+                    credentials: 'omit'
+                }
+            ];
+            
+            for (let i = 0; i < strategies.length; i++) {
+                try {
+                    console.log(`Tentando estratégia ${i + 1} para ${urlType}:`, strategies[i]);
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
+                    
+                    const response = await fetch(url, {
+                        ...strategies[i],
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    // Para modo no-cors, não conseguimos verificar status, então assumimos sucesso
+                    if (strategies[i].mode === 'no-cors') {
+                        // Tentar novamente com CORS depois de confirmar que arquivo existe
+                        console.log(`Arquivo encontrado via no-cors, tentando download com CORS...`);
+                        return await tryFetchWithFallbacks(url, urlType); // Recursão com estratégias anteriores
+                    }
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const blob = await response.blob();
+                    
+                    if (blob.size === 0) {
+                        throw new Error(`Arquivo vazio recebido`);
+                    }
+                    
+                    if (blob.size < 1000) {
+                        throw new Error(`Arquivo muito pequeno (${blob.size} bytes)`);
+                    }
+                    
+                    console.log(`✅ Sucesso com estratégia ${i + 1} para ${urlType}: ${blob.size} bytes`);
+                    return blob;
+                    
+                } catch (error) {
+                    console.warn(`❌ Estratégia ${i + 1} falhou para ${urlType}:`, error.message);
+                    
+                    if (i === strategies.length - 1) {
+                        throw error; // Última estratégia, propagar erro
+                    }
+                    // Continuar para próxima estratégia
+                }
+            }
+        }
+        
+        // Mostrar mensagem de status
+        function showStatusMessage(message, type = 'info') {
+            statusMessage.innerHTML = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Limpar mensagem de status
+        function clearStatusMessage() {
+            statusMessage.style.display = 'none';
+        }
+        
+        // ✅ FUNÇÃO DE CARREGAMENTO MELHORADA COM MÚLTIPLAS URLs
+        async function loadFromGitHub(attempt = 1, urlIndex = 0) {
+            if (autoLoadAttempted && attempt === 1) {
+                return;
+            }
+            
+            // Se não há mais URLs para tentar
+            if (urlIndex >= CONFIG.fallbackUrls.length) {
+                autoLoadAttempted = true;
+                showStatusMessage(`
+                    <strong>⚠️ Carregamento automático falhou</strong><br>
+                    Erro: Failed to fetch<br>
+                    <em>Use o upload manual abaixo ou tente novamente</em>
+                `, 'error');
+                
+                if (CONFIG.fallbackToManual) {
+                    showManualUploadInterface();
+                    const retryBtn = document.getElementById('retry-github-btn');
+                    if (retryBtn) {
+                        retryBtn.style.display = 'flex';
+                    }
+                }
+                return;
+            }
+            
+            const currentUrl = CONFIG.fallbackUrls[urlIndex];
+            const urlType = currentUrl.includes('jsdelivr') ? 'jsDelivr CDN' : 
+                           currentUrl.includes('raw.githubusercontent.com') ? 'GitHub Raw' : 'Local';
+            
+            try {
+                showStatusMessage(`🌐 Tentativa ${attempt}/${CONFIG.retryAttempts} - Carregando via ${urlType}...`, 'info');
+                loading.style.display = 'flex';
+                
+                // ✅ VERIFICAR CONECTIVIDADE PRIMEIRO
+                if (attempt === 1 && urlIndex === 0 && !currentUrl.startsWith('./')) {
+                    const isOnline = await checkConnectivity();
+                    if (!isOnline) {
+                        throw new Error('Sem conexão com a internet');
+                    }
+                }
+                
+                // ✅ USAR NOVA ESTRATÉGIA DE MÚLTIPLOS FALLBACKS
+                const blob = await tryFetchWithFallbacks(currentUrl, urlType);
+                
+                if (blob.size === 0) {
+                    throw new Error(`Arquivo vazio recebido de ${urlType}`);
+                }
+                
+                if (blob.size < 1000) { // Arquivo muito pequeno, provavelmente erro
+                    throw new Error(`Arquivo muito pequeno (${blob.size} bytes) de ${urlType}`);
+                }
+                
+                clearStatusMessage();
+                showStatusMessage(`🔄 Processando arquivo baixado de ${urlType}...`, 'info');
+                
+                await processWordDocument(blob);
+                hideManualUploadInterface();
+                autoLoadAttempted = true;
+                
+                showStatusMessage(`✅ ${faqs.length} Normativos e Referências carregados automaticamente de ${urlType}!`, 'success');
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                console.warn(`Tentativa ${attempt} com ${urlType} falhou:`, error);
+                
+                const errorMessage = error.name === 'AbortError' ? 
+                    `Timeout: ${urlType} demorou muito para responder` :
+                    error.message;
+                
+                if (attempt < CONFIG.retryAttempts) {
+                    // Tentar novamente com a mesma URL
+                    showStatusMessage(`⚠️ ${urlType} falhou. Tentando novamente em ${CONFIG.retryDelay/1000}s...`, 'info');
+                    
+                    setTimeout(() => {
+                        loadFromGitHub(attempt + 1, urlIndex);
+                    }, CONFIG.retryDelay);
+                    
+                } else {
+                    // Tentar próxima URL
+                    if (urlIndex + 1 < CONFIG.fallbackUrls.length) {
+                        showStatusMessage(`⚠️ ${urlType} falhou. Tentando próxima fonte...`, 'info');
+                        setTimeout(() => {
+                            loadFromGitHub(1, urlIndex + 1); // Reset attempt para nova URL
+                        }, 1000);
+                    } else {
+                        // Todas as URLs falharam
+                        loadFromGitHub(1, urlIndex + 1); // Isso irá chamar o erro final
+                    }
+                }
+            }
+        }
+        
+        // Inicializar o aplicativo
+        function initApp() {
+            try {
+                loadFavorites();
+                
+                if (CONFIG.autoLoad && CONFIG.fallbackUrls.length > 0 && !autoLoadAttempted) {
+                    // Tentar carregamento automático
+                    loadFromGitHub();
+                    
+                    if (CONFIG.fallbackToManual) {
+                        // Mostrar interface manual, mas oculta inicialmente
+                        setTimeout(() => {
+                            if (!autoLoadAttempted || faqs.length === 0) {
+                                showManualUploadInterface();
+                            }
+                        }, 8000); // Aumentado para 8s para dar mais tempo
+                    }
+                } else {
+                    // Carregar diretamente interface manual
+                    showManualUploadInterface();
+                    showStatusMessage('📁 Selecione um arquivo Word (.docx) para carregar os normativos e referências', 'info');
+                }
+                
+                uploadBtn.addEventListener('click', handleFileUpload);
+                
+                // Configurar botão de retry do GitHub
+                const retryGitHubBtn = document.getElementById('retry-github-btn');
+                if (retryGitHubBtn) {
+                    retryGitHubBtn.addEventListener('click', function() {
+                        if (CONFIG.fallbackUrls.length > 0) {
+                            autoLoadAttempted = false; // Reset flag
+                            currentUrlIndex = 0; // Reset URL index
+                            hideManualUploadInterface();
+                            loadFromGitHub();
+                        } else {
+                            showStatusMessage('❌ URLs de GitHub não configuradas!', 'error');
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Erro ao inicializar aplicativo:', error);
+                showStatusMessage(`Erro ao inicializar: ${error.message}`, 'error');
+                showManualUploadInterface();
+            }
+        }
+
+        // Mostrar interface de upload manual
+        function showManualUploadInterface() {
+            const uploadContainer = document.getElementById('file-upload-container');
+            
+            if (uploadContainer) uploadContainer.style.display = 'flex';
+            
+            if (faqs.length === 0) {
+                faqResults.innerHTML = `
+                    <div class="no-results">
+                        <h3>Carregue a base de dados</h3>
+                    </div>
+                `;
+            }
+        }
+
+        // Esconder interface de upload manual
+        function hideManualUploadInterface() {
+            const uploadContainer = document.getElementById('file-upload-container');
+            
+            if (uploadContainer) uploadContainer.style.display = 'none';
+        }
+
+        // Manipular upload de arquivo local
+        async function handleFileUpload() {
+            const file = fileUpload.files[0];
+            
+            if (!file) {
+                showStatusMessage('Por favor, selecione um arquivo Word (.docx) antes de carregar.', 'error');
+                return;
+            }
+            
+            if (file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                showStatusMessage('Por favor, selecione um arquivo Word (.docx) válido.', 'error');
+                return;
+            }
+            
+            try {
+                loading.style.display = 'flex';
+                faqResults.innerHTML = '';
+                clearStatusMessage();
+                
+                showStatusMessage('Processando arquivo Word...', 'info');
+                
+                await processWordDocument(file);
+                hideManualUploadInterface();
+                showStatusMessage(`${faqs.length} Normativos e referências carregados com sucesso!`, 'success');
+                
+            } catch (error) {
+                console.error('Erro ao processar arquivo:', error);
+                
+                showStatusMessage(`
+                    <h3>Erro ao processar o arquivo</h3>
+                    <p>${error.message || 'Erro desconhecido'}</p>
+                `, 'error');
+                
+                loading.style.display = 'none';
+            }
+        }
+
+        // Processar documento Word
+        async function processWordDocument(blob) {
+            const options = {
+                transformDocument: mammoth.transforms.paragraph(function(paragraph) {
+                    const style = paragraph.style && paragraph.style.styleId;
+                    const numbering = paragraph.numbering;
+                    
+                    if (numbering) {
+                        return {
+                            ...paragraph,
+                            styleId: `list-${numbering.level || 0}-${numbering.isOrdered ? 'ordered' : 'unordered'}`
+                        };
+                    }
+                    return paragraph;
+                }),
+                ignoreEmptyParagraphs: false,
+                preserveStyles: true
+            };
+            
+            const result = await mammoth.convertToHtml({ arrayBuffer: await blob.arrayBuffer() }, options);
+            const htmlContent = result.value;
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            
+            faqs = extractFAQsFromTables(tempDiv);
+            
+            if (faqs.length === 0) {
+                throw new Error('Nenhum normativo ou referência encontrado no arquivo. Verifique o formato das tabelas.');
+            }
+            
+            renderFAQs(faqs);
+            loading.style.display = 'none';
+        }
+        
+        // Extrair Normativos e Referências das tabelas no documento Word
+        function extractFAQsFromTables(htmlElement) {
+            const extractedFaqs = [];
+            const tables = htmlElement.querySelectorAll('table');
+            
+            predefinedCategories.forEach(category => {
+                let foundTable = false;
+                
+                for (const table of tables) {
+                    let previousElement = table.previousElementSibling;
+                    let categoryMatch = false;
+                    
+                    for (let i = 0; i < 3; i++) {
+                        if (!previousElement) break;
+                        
+                        const headerText = previousElement.textContent.trim();
+                        if (headerText.includes(category.name) || headerText.includes(category.id)) {
+                            categoryMatch = true;
+                            break;
+                        }
+                        
+                        previousElement = previousElement.previousElementSibling;
+                    }
+                    
+                    if (!categoryMatch) {
+                        const firstRow = table.querySelector('tr');
+                        if (firstRow) {
+                            const firstRowText = firstRow.textContent.trim();
+                            if (firstRowText.includes(category.name) || firstRowText.includes(category.id)) {
+                                categoryMatch = true;
+                            }
+                        }
+                    }
+                    
+                    if (categoryMatch) {
+                        foundTable = true;
+                        
+                        const rows = table.querySelectorAll('tr');
+                        const startIndex = rows.length > 0 && 
+                                          (rows[0].textContent.includes('ID') || 
+                                           rows[0].textContent.includes('Pergunta') || 
+                                           rows[0].textContent.includes('Resposta')) ? 1 : 0;
+                        
+                        for (let i = startIndex; i < rows.length; i++) {
+                            const cells = rows[i].querySelectorAll('td');
+                            
+                            if (cells.length >= 3) {
+                                const id = cells[0].textContent.trim();
+                                
+                                // Extrair título e URL da segunda coluna
+                                let question = '';
+                                let url = '';
+                                
+                                const questionCell = cells[1];
+                                const linkElement = questionCell.querySelector('a');
+                                
+                                if (linkElement) {
+                                    // Se existe um link, extrair texto e URL
+                                    question = linkElement.textContent.trim();
+                                    url = linkElement.href || linkElement.getAttribute('href') || '';
+                                    
+                                    // Se a URL for relativa, tentar encontrar uma URL absoluta
+                                    if (url && !url.startsWith('http')) {
+                                        // Tentar extrair uma URL absoluta do texto ou outros atributos
+                                        const fullUrl = linkElement.getAttribute('title') || 
+                                                       linkElement.dataset.url || 
+                                                       url;
+                                        url = fullUrl;
+                                    }
+                                } else {
+                                    // Se não existe link, usar apenas o texto
+                                    question = questionCell.textContent.trim();
+                                }
+                                
+                                let answerHtml = cells[2].innerHTML;
+                                
+                                const tempElement = document.createElement('div');
+                                tempElement.innerHTML = answerHtml;
+                                
+                                const processLists = (element) => {
+                                    const lists = element.querySelectorAll('ul, ol');
+                                    
+                                    lists.forEach(list => {
+                                        list.style.paddingLeft = '20px';
+                                        list.style.margin = '0.5rem 0';
+                                        
+                                        const items = list.querySelectorAll('li');
+                                        items.forEach((item, index) => {
+                                            let level = 0;
+                                            let parent = item.parentElement;
+                                            while (parent && (parent.tagName === 'UL' || parent.tagName === 'OL')) {
+                                                level++;
+                                                parent = parent.parentElement.closest('ul, ol');
+                                            }
+                                            
+                                            item.setAttribute('data-list-level', level);
+                                            item.style.marginBottom = '0.25rem';
+                                        });
+                                    });
+                                };
+                                
+                                const preserveWhitespace = (element) => {
+                                    if (element.nodeType === 3) {
+                                        const text = element.textContent;
+                                        if (text.includes('\t') || text.includes('  ')) {
+                                            const parent = element.parentNode;
+                                            const newSpan = document.createElement('span');
+                                            newSpan.style.whiteSpace = 'pre-wrap';
+                                            newSpan.textContent = text;
+                                            parent.replaceChild(newSpan, element);
+                                        }
+                                    } else if (element.nodeType === 1) {
+                                        if (element.tagName === 'UL' || element.tagName === 'OL' || element.tagName === 'LI') {
+                                            // Não alterar listas
+                                        } else {
+                                            Array.from(element.childNodes).forEach(preserveWhitespace);
+                                        }
+                                    }
+                                };
+                                
+                                processLists(tempElement);
+                                preserveWhitespace(tempElement);
+                                
+                                answerHtml = tempElement.innerHTML;
+                                
+                                const tempForParagraphs = document.createElement('div');
+                                tempForParagraphs.innerHTML = answerHtml;
+                                
+                                const processNonListParagraphs = (element) => {
+                                    if (element.closest('ul, ol')) return;
+                                    
+                                    if (element.tagName === 'P' || element.tagName === 'DIV') {
+                                        element.style.marginBottom = '0.25em';
+                                        element.style.marginTop = '0';
+                                        element.style.display = 'block';
+                                        element.style.textIndent = '1.25cm';
+                                    } else {
+                                        Array.from(element.children).forEach(processNonListParagraphs);
+                                    }
+                                };
+                                
+                                Array.from(tempForParagraphs.children).forEach(processNonListParagraphs);
+                                
+                                answerHtml = tempForParagraphs.innerHTML;
+                                answerHtml = answerHtml.replace(/<br><br>/g, '<br>');
+                                answerHtml = answerHtml.replace(/^<br>|<br>$/g, '');
+                                
+                                const answer = answerHtml.trim() || cells[2].textContent.trim();
+                                
+                                if (id && question && answer) {
+                                    extractedFaqs.push({
+                                        id: id,
+                                        question: question,
+                                        answer: answer,
+                                        category: category.id,
+                                        url: url, // Adicionar URL à estrutura
+                                        tags: []
+                                    });
+                                }
+                            }
+                        }
+                        
+                        break;
+                    }
+                }
+            });
+            
+            return extractedFaqs;
+        }
+        
+        // Renderizar vista inicial com categorias colapsadas
+        function renderCategoriesOverview() {
+            const faqsByCategory = {};
+            categories.forEach(category => {
+                faqsByCategory[category.id] = faqs.filter(faq => faq.category === category.id);
+            });
+            
+            let overviewHTML = `
+                <div class="categories-overview">
+                    <div class="categories-grid">
+            `;
+            
+            categories.forEach(category => {
+                const categoryFaqs = faqsByCategory[category.id] || [];
+                const count = categoryFaqs.length;
+                
+                if (count === 0) return;
+                
+                const categoryIcon = getCategoryIcon(category.id);
+                
+                overviewHTML += `
+                    <div class="category-card" data-category="${category.id}">
+                        <div class="category-header" data-category-id="${category.id}">
+                            <div class="category-info">
+                                <div class="category-icon">
+                                    <div class="category-number">${count}</div>
+                                    <div class="category-label">itens</div>
+                                </div>
+                                <div class="category-details">
+                                    <h3 class="category-name">${category.name}</h3>
+                                </div>
+                            </div>
+                            <div class="category-toggle">
+                                <i class="ri-arrow-down-s-line"></i>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <div class="faq-list">
+                                ${renderCategoryFAQs(categoryFaqs)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            overviewHTML += `
+                    </div>
+                </div>
+            `;
+            
+            faqResults.innerHTML = overviewHTML;
+            setupCategoryListeners();
+        }
+        
+        // Renderizar Normativos e Referências de uma categoria específica
+        function renderCategoryFAQs(categoryFaqs) {
+            let faqsHTML = '';
+            
+            categoryFaqs.forEach(faq => {
+                const isFavorite = isFaqFavorited(faq.id);
+                const favoriteClass = isFavorite ? 'is-favorite' : '';
+                const favoriteButtonClass = isFavorite ? 'favorited' : '';
+                const favoriteIcon = isFavorite ? 'ri-star-fill' : 'ri-star-line';
+                
+                // Adicionar botão de link externo se houver URL
+                let externalLinkButton = '';
+                if (faq.url && faq.url.trim()) {
+                    externalLinkButton = `
+                        <button class="external-link-btn" 
+                                onclick="window.open('${faq.url}', '_blank', 'noopener,noreferrer')"
+                                title="Fonte da informação ou conceito">
+                            <i class="ri-external-link-line"></i>
+                        </button>
+                    `;
+                }
+                
+                faqsHTML += `
+                    <div class="faq-item ${favoriteClass}" data-id="${faq.id}">
+                        <div class="question-header">
+                            <div class="question-text">${faq.question}</div>
+                            <div style="display: flex; align-items: center;">
+                                ${externalLinkButton}
+                                <button class="favorite-btn ${favoriteButtonClass}" 
+                                        onclick="toggleFavorite('${faq.id}', '${escapeForAttribute(faq.question)}', '${faq.category}')"
+                                        title="${isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+                                    <i class="${favoriteIcon}"></i>
+                                </button>
+                                <i class="ri-arrow-down-s-line"></i>
+                            </div>
+                        </div>
+                        <div class="answer">
+                            <div>${faq.answer}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return faqsHTML;
+        }
+        
+        // Renderizar Normativos e Referências - SEMPRE USAR CARDS COMO BASE
+        function renderFAQs(faqsToRender) {
+            renderCategoriesOverview();
+            
+            if (searchInput.value.trim() || activeCategory || showingFavorites) {
+                setTimeout(() => {
+                    applyFiltersToCards(faqsToRender);
+                }, 100);
+            }
+        }
+        
+        // Configurar listeners para FAQs
+        function setupFAQListeners() {
+            document.querySelectorAll('.question-header').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    // Não expandir/recolher se clicou no botão de favoritos ou link externo
+                    if (e.target.closest('.favorite-btn') || e.target.closest('.external-link-btn')) {
+                        return;
+                    }
+                    
+                    const faqItem = this.parentElement;
+                    const isExpanded = faqItem.classList.contains('expanded');
+                    
+                    if (isExpanded) {
+                        faqItem.classList.remove('expanded');
+                    } else {
+                        faqItem.classList.add('expanded');
+                    }
+                });
+            });
+        }
+        
+        // Configurar listeners para categorias
+        function setupCategoryListeners() {
+            setupFAQListeners();
+            
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            
+            categoryHeaders.forEach((header, index) => {
+                const categoryCard = header.closest('.category-card');
+                const categoryId = categoryCard ? categoryCard.getAttribute('data-category') : 
+                                   header.getAttribute('data-category-id');
+                
+                header.addEventListener('click', function(event) {
+                    if (event.target.closest('.favorite-btn')) {
+                        return;
+                    }
+                    
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    if (categoryId) {
+                        const card = document.querySelector(`[data-category="${categoryId}"]`);
+                        if (card) {
+                            const isExpanded = card.classList.contains('expanded');
+                            
+                            if (isExpanded) {
+                                card.classList.remove('expanded');
+                            } else {
+                                card.classList.add('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Obter ícone para categoria
+        function getCategoryIcon(categoryId) {
+            return 'ri-shield-check-line';
+        }
+        
+        // Função para normalizar texto
+        function normalizeText(text) {
+            return text.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^\w\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        // Função para calcular distância de Levenshtein
+        function levenshteinDistance(str1, str2) {
+            const matrix = [];
+            for (let i = 0; i <= str2.length; i++) {
+                matrix[i] = [i];
+            }
+            for (let j = 0; j <= str1.length; j++) {
+                matrix[0][j] = j;
+            }
+            for (let i = 1; i <= str2.length; i++) {
+                for (let j = 1; j <= str1.length; j++) {
+                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            return matrix[str2.length][str1.length];
+        }
+        
+        // Função para expandir termos de busca com sinônimos
+        function expandSearchTerms(searchTerm) {
+            const normalizedTerm = normalizeText(searchTerm);
+            const words = normalizedTerm.split(' ').filter(word => word.length > 2);
+            const expandedTerms = new Set();
+            
+            words.forEach(word => {
+                expandedTerms.add(word);
+                
+                Object.keys(synonymMap).forEach(key => {
+                    if (word === key || synonymMap[key].includes(word)) {
+                        synonymMap[key].forEach(synonym => {
+                            expandedTerms.add(normalizeText(synonym));
+                        });
+                    }
+                    else if (word.length > 4 && levenshteinDistance(word, key) <= 1) {
+                        synonymMap[key].forEach(synonym => {
+                            expandedTerms.add(normalizeText(synonym));
+                        });
+                    }
+                });
+            });
+            
+            return Array.from(expandedTerms);
+        }
+        
+        // Função para calcular score de relevância
+        function calculateRelevanceScore(faq, searchTerms, originalSearchTerm) {
+            const questionText = normalizeText(faq.question);
+            const answerText = normalizeText(faq.answer);
+            const fullText = questionText + ' ' + answerText;
+            
+            let score = 0;
+            const foundTerms = new Set();
+            
+            const originalNormalized = normalizeText(originalSearchTerm);
+            const originalWords = originalNormalized.split(' ').filter(w => w.length > 2);
+            
+            let hasDirectMatch = false;
+            
+            originalWords.forEach(word => {
+                if (questionText.includes(word)) {
+                    score += 20;
+                    foundTerms.add(word);
+                    hasDirectMatch = true;
+                }
+                if (answerText.includes(word)) {
+                    score += 10;
+                    foundTerms.add(word);
+                    hasDirectMatch = true;
+                }
+            });
+            
+            if (!hasDirectMatch) {
+                searchTerms.forEach(term => {
+                    const isOriginalTerm = originalWords.includes(term);
+                    
+                    if (questionText.includes(term)) {
+                        score += isOriginalTerm ? 15 : 5;
+                        foundTerms.add(term);
+                    }
+                    
+                    if (answerText.includes(term)) {
+                        score += isOriginalTerm ? 8 : 3;
+                        foundTerms.add(term);
+                    }
+                });
+            }
+            
+            const matchedOriginalTerms = originalWords.filter(word => 
+                questionText.includes(word) || answerText.includes(word)
+            );
+            
+            const matchPercentage = matchedOriginalTerms.length / originalWords.length;
+            if (matchPercentage < 0.7) {
+                score = score * 0.3;
+            }
+            
+            if (matchPercentage >= 0.8) {
+                score += foundTerms.size * 2;
+            }
+            
+            return { score, foundTerms: Array.from(foundTerms) };
+        }
+        
+        // Filtrar FAQs
+        function filterFAQs() {
+            const originalSearchTerm = searchInput.value.trim();
+            
+            let filteredFAQs = faqs;
+            
+            if (activeCategory) {
+                filteredFAQs = filteredFAQs.filter(faq => faq.category === activeCategory);
+            }
+            
+            if (originalSearchTerm) {
+                const expandedTerms = expandSearchTerms(originalSearchTerm);
+                
+                const faqsWithScore = filteredFAQs.map(faq => {
+                    const relevance = calculateRelevanceScore(faq, expandedTerms, originalSearchTerm);
+                    return {
+                        ...faq,
+                        relevanceScore: relevance.score,
+                        foundTerms: relevance.foundTerms
+                    };
+                });
+                
+                filteredFAQs = faqsWithScore
+                    .filter(faq => faq.relevanceScore > 0)
+                    .sort((a, b) => b.relevanceScore - a.relevanceScore);
+                
+                filteredFAQs = filteredFAQs.map(faq => {
+                    let highlightedQuestion = faq.question;
+                    let highlightedAnswer = faq.answer;
+                    
+                    const allTermsToHighlight = [
+                        ...normalizeText(originalSearchTerm).split(' ').filter(w => w.length > 2),
+                        ...faq.foundTerms
+                    ];
+                    
+                    allTermsToHighlight.forEach(term => {
+                        if (term.length > 2) {
+                            highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, term);
+                            highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, term);
+                        }
+                    });
+                    
+                    return {
+                        ...faq,
+                        question: highlightedQuestion,
+                        answer: highlightedAnswer
+                    };
+                });
+            }
+            
+            renderFAQs(filteredFAQs);
+        }
+        
+        // Destacar termos de pesquisa no texto
+        function highlightSearchTermFlexible(text, term) {
+            if (!term || term.length < 3) return text;
+            
+            const normalizedTerm = normalizeText(term);
+            const isHtml = /<[a-z][\s\S]*>/i.test(text);
+            
+            if (isHtml) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+                
+                function highlightNodesText(node) {
+                    if (node.nodeType === 3) {
+                        const content = node.textContent;
+                        const normalizedContent = normalizeText(content);
+                        
+                        if (normalizedContent.includes(normalizedTerm)) {
+                            const words = content.split(/(\s+)/);
+                            let newContent = '';
+                            
+                            words.forEach(word => {
+                                const normalizedWord = normalizeText(word);
+                                if (normalizedWord.includes(normalizedTerm) && normalizedWord.length > 2) {
+                                    newContent += `<span class="highlight">${word}</span>`;
+                                } else {
+                                    newContent += word;
+                                }
+                            });
+                            
+                            if (newContent !== content) {
+                                const span = document.createElement('span');
+                                span.innerHTML = newContent;
+                                node.parentNode.replaceChild(span, node);
+                            }
+                        }
+                    } else if (node.nodeType === 1) {
+                        if (node.className !== 'highlight') {
+                            Array.from(node.childNodes).forEach(highlightNodesText);
+                        }
+                    }
+                }
+                
+                Array.from(tempDiv.childNodes).forEach(highlightNodesText);
+                return tempDiv.innerHTML;
+            } else {
+                const words = text.split(/(\s+)/);
+                return words.map(word => {
+                    const normalizedWord = normalizeText(word);
+                    if (normalizedWord.includes(normalizedTerm) && normalizedWord.length > 2) {
+                        return `<span class="highlight">${word}</span>`;
+                    }
+                    return word;
+                }).join('');
+            }
+        }
+        
+        // Função para configurar links externos
+        function configureExternalLinks() {
+            setTimeout(() => {
+                const answerLinks = document.querySelectorAll('.answer a');
+                
+                answerLinks.forEach(link => {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                    
+                    if (!link.querySelector('.external-link-icon')) {
+                        const icon = document.createElement('i');
+                        icon.className = 'ri-external-link-line external-link-icon';
+                        icon.style.marginLeft = '4px';
+                        icon.style.fontSize = '0.9em';
+                        icon.style.opacity = '0.7';
+                        link.appendChild(icon);
+                    }
+                });
+            }, 100);
+        }
+        
+        // Verificar disponibilidade do localStorage
+        function checkLocalStorageAvailability() {
+            try {
+                const testKey = 'faq-storage-test';
+                localStorage.setItem(testKey, 'test');
+                localStorage.removeItem(testKey);
+                localStorageAvailable = true;
+                return true;
+            } catch (error) {
+                localStorageAvailable = false;
+                return false;
+            }
+        }
+        
+        // Carregar favoritos
+        function loadFavorites() {
+            try {
+                if (checkLocalStorageAvailability()) {
+                    const savedFavorites = localStorage.getItem('normativos-referencias-favorites');
+                    favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+                } else {
+                    favorites = [];
+                    if (!hasShownStorageWarning) {
+                        showStorageWarning();
+                        hasShownStorageWarning = true;
+                    }
+                }
+            } catch (error) {
+                favorites = [];
+            }
+        }
+        
+        // Salvar favoritos
+        function saveFavorites() {
+            try {
+                if (localStorageAvailable) {
+                    localStorage.setItem('normativos-referencias-favorites', JSON.stringify(favorites));
+                }
+            } catch (error) {
+                // Falha silenciosa
+            }
+        }
+        
+        // Mostrar aviso sobre limitações de armazenamento
+        function showStorageWarning() {
+            setTimeout(() => {
+                showStatusMessage(`
+                    <strong>ℹ️ Informação sobre Favoritos:</strong><br>
+                    Seus favoritos serão mantidos apenas durante esta sessão. 
+                    Para salvar permanentemente, baixe o portal e execute localmente.
+                `, 'info');
+                
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 8000);
+            }, 2000);
+        }
+        
+        // Verificar se um Normativo ou Referência está favoritado
+        function isFaqFavorited(faqId) {
+            return favorites.some(fav => fav.id === faqId);
+        }
+        
+        // Função para escapar strings para uso em atributos HTML
+        function escapeForAttribute(str) {
+            return str.replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+        }
+        
+        // Adicionar ou remover favorito
+        function toggleFavorite(faqId, faqQuestion, faqCategory) {
+            const existingIndex = favorites.findIndex(fav => fav.id === faqId);
+            
+            if (existingIndex >= 0) {
+                favorites.splice(existingIndex, 1);
+                showStatusMessage(`"${faqQuestion}" removido dos favoritos`, 'info');
+            } else {
+                const favoriteItem = {
+                    id: faqId,
+                    question: faqQuestion,
+                    category: faqCategory,
+                    addedAt: new Date().toISOString()
+                };
+                favorites.push(favoriteItem);
+                showStatusMessage(`"${faqQuestion}" adicionado aos favoritos`, 'success');
+                
+                const favoriteBtn = document.querySelector(`[onclick*="${faqId}"]`);
+                if (favoriteBtn) {
+                    favoriteBtn.classList.add('just-favorited');
+                    setTimeout(() => favoriteBtn.classList.remove('just-favorited'), 300);
+                }
+            }
+            
+            saveFavorites();
+            updateFavoritesCounter();
+            
+            if (showingFavorites) {
+                renderFavorites();
+            } else {
+                updateFavoriteStyles();
+            }
+        }
+        
+        // Atualizar contador de favoritos no botão
+        function updateFavoritesCounter() {
+            const counter = document.getElementById('main-favorites-counter');
+            if (counter) {
+                counter.textContent = favorites.length;
+                
+                counter.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    counter.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+        
+        // Atualizar estilos visuais dos favoritos
+        function updateFavoriteStyles() {
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const faqId = item.dataset.id;
+                const isFavorite = isFaqFavorited(faqId);
+                const favoriteBtn = item.querySelector('.favorite-btn');
+                const favoriteIcon = favoriteBtn.querySelector('i');
+                
+                if (isFavorite) {
+                    item.classList.add('is-favorite');
+                    favoriteBtn.classList.add('favorited');
+                    favoriteIcon.className = 'ri-star-fill';
+                    favoriteBtn.title = 'Remover dos favoritos';
+                } else {
+                    item.classList.remove('is-favorite');
+                    favoriteBtn.classList.remove('favorited');
+                    favoriteIcon.className = 'ri-star-line';
+                    favoriteBtn.title = 'Adicionar aos favoritos';
+                }
+            });
+        }
+        
+        // Renderizar lista de favoritos
+        function renderFavorites() {
+            if (favorites.length === 0) {
+                faqResults.innerHTML = `
+                    <div class="favorites-empty">
+                        <i class="ri-star-line"></i>
+                        <h3>Nenhum favorito ainda</h3>
+                        <p>Marque seus normativos ou referências favoritos clicando no ícone da estrela ao lado de cada elemento.</p>
+                        <p>Seus favoritos aparecerão aqui para acesso rápido!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const favoriteFaqs = favorites.map(favorite => {
+                return faqs.find(faq => faq.id === favorite.id);
+            }).filter(faq => faq !== undefined);
+            
+            const faqsByCategory = {};
+            favoriteFaqs.forEach(faq => {
+                if (!faqsByCategory[faq.category]) {
+                    faqsByCategory[faq.category] = [];
+                }
+                faqsByCategory[faq.category].push(faq);
+            });
+            
+            let faqsHTML = `
+                <div class="faq-section">
+                    <h2 class="section-title">
+                        <i class="ri-star-fill" style="color: var(--ms-yellow); margin-right: 8px;"></i>
+                        Meus Favoritos (${favorites.length})
+                    </h2>
+            `;
+            
+            Object.keys(faqsByCategory).forEach(categoryId => {
+                const categoryFaqs = faqsByCategory[categoryId];
+                const categoryName = categories.find(c => c.id === categoryId)?.name || 'Outros';
+                
+                faqsHTML += `
+                    <div class="faq-subsection" style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--ms-blue); margin-bottom: 1rem; font-size: 1.1rem;">
+                            ${categoryName} (${categoryFaqs.length})
+                        </h3>
+                        <div class="faq-list">
+                `;
+                
+                categoryFaqs.forEach(faq => {
+                    // Adicionar botão de link externo se houver URL
+                    let externalLinkButton = '';
+                    if (faq.url && faq.url.trim()) {
+                        externalLinkButton = `
+                            <button class="external-link-btn" 
+                                    onclick="window.open('${faq.url}', '_blank', 'noopener,noreferrer')"
+                                    title="Fonte da informação ou conceito">
+                                <i class="ri-external-link-line"></i>
+                            </button>
+                        `;
+                    }
+                    
+                    faqsHTML += `
+                        <div class="faq-item is-favorite" data-id="${faq.id}">
+                            <div class="question-header">
+                                <div class="question-text">${faq.question}</div>
+                                <div style="display: flex; align-items: center;">
+                                    ${externalLinkButton}
+                                    <button class="favorite-btn favorited" 
+                                            onclick="toggleFavorite('${faq.id}', '${escapeForAttribute(faq.question)}', '${faq.category}')"
+                                            title="Remover dos favoritos">
+                                        <i class="ri-star-fill"></i>
+                                    </button>
+                                    <i class="ri-arrow-down-s-line"></i>
+                                </div>
+                            </div>
+                            <div class="answer">
+                                <div>${faq.answer}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                faqsHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            faqsHTML += `</div>`;
+            
+            faqResults.innerHTML = faqsHTML;
+            
+            document.querySelectorAll('.question-header').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    // Não expandir/recolher se clicou no botão de favoritos ou link externo
+                    if (e.target.closest('.favorite-btn') || e.target.closest('.external-link-btn')) {
+                        return;
+                    }
+                    
+                    const faqItem = this.parentElement;
+                    faqItem.classList.toggle('expanded');
+                });
+            });
+            
+            configureExternalLinks();
+        }
+        
+        // Inicializar sistema de navegação
+        function initNavigationSystem() {
+            navigationSimple = document.getElementById('navigation-simple');
+            setupKeyboardShortcuts();
+        }
+        
+        // Mostrar sistema de navegação
+        function showNavigationSystem() {
+            if (navigationSimple && faqs.length > 0) {
+                navigationSimple.style.display = 'block';
+            }
+        }
+        
+        // Renderizar vista dedicada de categoria
+        function renderCategoryDedicatedView(categoryId, categoryName, categoryFAQs) {
+            let dedicatedHTML = `
+                <div class="category-dedicated-view">
+                    <div class="dedicated-header">
+                        <div class="dedicated-info">
+                            <h2><i class="ri-folder-open-line"></i> ${categoryName}</h2>
+                            <span class="dedicated-count">${categoryFAQs.length} pergunta${categoryFAQs.length !== 1 ? 's' : ''} encontrada${categoryFAQs.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="dedicated-actions">
+                            <button class="expand-all-dedicated-btn" onclick="expandAllDedicatedFAQs()">
+                                <i class="ri-arrow-down-s-line"></i> Expandir Todos
+                            </button>
+                            <button class="collapse-all-dedicated-btn" onclick="collapseAllDedicatedFAQs()" style="display: none;">
+                                <i class="ri-arrow-up-s-line"></i> Recolher Todos
+                            </button>
+                        </div>
+                    </div>
+                    <div class="dedicated-content">
+                        <div class="faq-list">
+                            ${renderCategoryFAQs(categoryFAQs)}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            faqResults.innerHTML = dedicatedHTML;
+            
+            setupFAQListeners();
+            configureExternalLinks();
+        }
+        
+        // Mostrar favoritos via cards
+        function showFavorites() {
+            activeCategory = null;
+            showingFavorites = true;
+            searchInput.value = '';
+            
+            updateNavigationButtons();
+            
+            const favoriteFAQS = favorites.map(favorite => {
+                return faqs.find(faq => faq.id === favorite.id);
+            }).filter(faq => faq !== undefined);
+            
+            if (favoriteFAQS.length === 0) {
+                renderCategoriesOverview();
+                setTimeout(() => {
+                    const overviewContainer = document.querySelector('.categories-overview .categories-grid');
+                    if (overviewContainer) {
+                        overviewContainer.innerHTML = `
+                            <div class="favorites-empty" style="grid-column: 1; text-align: center; padding: 3rem 2rem;">
+                                <i class="ri-star-line" style="font-size: 3rem; color: var(--ms-grey); margin-bottom: 1rem;"></i>
+                                <h3>Nenhum favorito ainda</h3>
+                                <p>Marque seus normativos ou referências favoritos clicando no ícone da estrela ao lado de cada elemento.</p>
+                                <p>Seus favoritos aparecerão aqui para acesso rápido!</p>
+                                <button class="back-to-overview-btn" onclick="showAllFAQsButton()" style="margin-top: 1rem; border: none; background: var(--ms-blue); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                                    <i class="ri-home-3-line"></i> Ver Todos os Normativos e Referências
+                                </button>
+                            </div>
+                        `;
+                    }
+                }, 100);
+                return;
+            }
+            
+            setTimeout(() => {
+                applyFiltersToCards(favoriteFAQS);
+                
+                setTimeout(() => {
+                    const visibleCards = document.querySelectorAll('.category-card[style*="block"], .category-card:not([style*="none"])');
+                    
+                    visibleCards.forEach(card => {
+                        const faqItems = card.querySelectorAll('.faq-item');
+                        faqItems.forEach(faq => {
+                            faq.classList.add('expanded');
+                        });
+                    });
+                    
+                    showStatusMessage(`⭐ Exibindo ${favoriteFAQS.length} favoritos com normativos e referências abertos`, 'success');
+                }, 300);
+            }, 100);
+        }
+        
+        // Mostrar todos os Normativos e Referências via cards
+        function showAllFAQs() {
+            activeCategory = null;
+            showingFavorites = false;
+            searchInput.value = '';
+            
+            renderCategoriesOverview();
+        }
+        
+        // Atalhos de teclado
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                if (e.ctrlKey && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+                
+                if (e.key === 'F1') {
+                    e.preventDefault();
+                    showKeyboardShortcuts();
+                }
+                
+                if (e.key === 'Escape') {
+                    hideKeyboardShortcuts();
+                }
+            });
+        }
+        
+        // Mostrar/ocultar atalhos de teclado
+        function showKeyboardShortcuts() {
+            document.getElementById('keyboard-shortcuts').classList.add('visible');
+        }
+        
+        function hideKeyboardShortcuts() {
+            document.getElementById('keyboard-shortcuts').classList.remove('visible');
+        }
+        
+        // Controlar visibilidade dos botões de navegação
+        function updateNavigationButtons() {
+            const showAllButton = document.getElementById('show-all-faqs-button');
+            const printButton = document.getElementById('print-favorites-button');
+            
+            const hasActiveFilters = showingFavorites || searchInput.value.trim() || activeCategory;
+            
+            if (showAllButton) {
+                if (hasActiveFilters) {
+                    showAllButton.style.display = 'flex';
+                } else {
+                    showAllButton.style.display = 'none';
+                }
+            }
+            
+            if (printButton) {
+                if (favorites.length > 0) {
+                    printButton.style.display = 'flex';
+                } else {
+                    printButton.style.display = 'none';
+                }
+            }
+        }
+        
+        // Imprimir favoritos
+        function printFavorites() {
+            if (favorites.length === 0) {
+                showStatusMessage('Nenhum favorito para imprimir!', 'info');
+                return;
+            }
+            
+            try {
+                showStatusMessage('🖨️ Preparando impressão...', 'info');
+                
+                function stripHTML(text) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = text;
+                    return tempDiv.textContent || tempDiv.innerText || '';
+                }
+                
+                const favoriteFAQS = favorites.map(favorite => {
+                    return faqs.find(faq => faq.id === favorite.id);
+                }).filter(faq => faq !== undefined);
+                
+                const faqsByCategory = {};
+                favoriteFAQS.forEach(faq => {
+                    if (!faqsByCategory[faq.category]) {
+                        faqsByCategory[faq.category] = [];
+                    }
+                    faqsByCategory[faq.category].push(faq);
+                });
+                
+                const currentDate = new Date().toLocaleDateString('pt-BR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                let printContent = `
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Normativos e Referências - Meus Favoritos</title>
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+                        
+                        body {
+                            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Arial', sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            background: white;
+                            font-size: 12pt;
+                            padding: 20mm;
+                            max-width: 210mm;
+                            margin: 0 auto;
+                        }
+                        
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            border-bottom: 3px solid #0078d4;
+                            padding-bottom: 20px;
+                        }
+                        
+                        .header h1 {
+                            color: #0078d4;
+                            font-size: 24pt;
+                            margin-bottom: 10px;
+                            font-weight: 600;
+                        }
+                        
+                        .header .info {
+                            color: #666;
+                            font-size: 11pt;
+                            margin: 5px 0;
+                        }
+                        
+                        .category {
+                            margin-bottom: 30px;
+                            page-break-inside: avoid;
+                        }
+                        
+                        .category-title {
+                            background-color: #107c10;
+                            color: white;
+                            padding: 12px 16px;
+                            font-size: 14pt;
+                            font-weight: 600;
+                            margin-bottom: 15px;
+                            border-radius: 4px;
+                        }
+                        
+                        .faq-item {
+                            margin-bottom: 25px;
+                            border-left: 4px solid #0078d4;
+                            padding-left: 15px;
+                            page-break-inside: avoid;
+                        }
+                        
+                        .question {
+                            font-weight: 600;
+                            margin-bottom: 10px;
+                            color: #000;
+                            font-size: 12pt;
+                        }
+                        
+                        .answer {
+                            color: #444;
+                            font-size: 11pt;
+                            text-align: justify;
+                            line-height: 1.5;
+                            margin-left: 10px;
+                        }
+                        
+                        .footer {
+                            margin-top: 40px;
+                            text-align: center;
+                            font-size: 9pt;
+                            color: #999;
+                            border-top: 1px solid #ddd;
+                            padding-top: 15px;
+                        }
+                        
+                        @media print {
+                            body {
+                                margin: 0;
+                                padding: 15mm;
+                                font-size: 10pt;
+                                -webkit-print-color-adjust: exact;
+                                color-adjust: exact;
+                            }
+                            
+                            .header h1 {
+                                font-size: 18pt;
+                            }
+                            
+                            .header .info {
+                                font-size: 9pt;
+                            }
+                            
+                            .category-title {
+                                font-size: 12pt;
+                                -webkit-print-color-adjust: exact;
+                                color-adjust: exact;
+                            }
+                            
+                            .question {
+                                font-size: 10pt;
+                            }
+                            
+                            .answer {
+                                font-size: 9pt;
+                            }
+                            
+                            .footer {
+                                font-size: 8pt;
+                            }
+                            
+                            .category {
+                                page-break-inside: avoid;
+                            }
+                            
+                            .faq-item {
+                                page-break-inside: avoid;
+                                break-inside: avoid;
+                            }
+                        }
+                        
+                        @page {
+                            margin: 15mm;
+                            size: A4;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Normativos e Referências - Meus Favoritos</h1>
+                        <div class="info">Impresso em: ${currentDate}</div>
+                        <div class="info">Total de favoritos: ${favorites.length}</div>
+                        <div class="info">Normativos e Referências</div>
+                    </div>
+                `;
+                
+                Object.keys(faqsByCategory).forEach(categoryId => {
+                    const categoryFaqs = faqsByCategory[categoryId];
+                    const categoryName = categories.find(c => c.id === categoryId)?.name || 'Outros';
+                    
+                    printContent += `
+                        <div class="category">
+                            <div class="category-title">
+                                ${categoryName} (${categoryFaqs.length} item${categoryFaqs.length !== 1 ? 's' : ''})
+                            </div>
+                    `;
+                    
+                    categoryFaqs.forEach(faq => {
+                        const cleanQuestion = stripHTML(faq.question);
+                        const cleanAnswer = stripHTML(faq.answer);
+                        
+                        printContent += `
+                            <div class="faq-item">
+                                <div class="question">
+                                    ${faq.id}. ${cleanQuestion}
+                                </div>
+                                <div class="answer">
+                                    ${cleanAnswer}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    printContent += `</div>`;
+                });
+                
+                printContent += `
+                    <div class="footer">
+                        Normativos e Referências - Documento gerado automaticamente em ${currentDate}
+                    </div>
+                </body>
+                </html>
+                `;
+                
+                const printWindow = window.open('', '_blank', 'width=800,height=600');
+                
+                if (!printWindow) {
+                    showStatusMessage('❌ Erro: Pop-ups bloqueados. Permita pop-ups para usar a impressão.', 'error');
+                    return;
+                }
+                
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        
+                        printWindow.onafterprint = function() {
+                            printWindow.close();
+                        };
+                        
+                        showStatusMessage('🖨️ Janela de impressão aberta! Use a impressora PDF para salvar como arquivo.', 'success');
+                    }, 500);
+                };
+                
+            } catch (error) {
+                showStatusMessage(`❌ Erro ao imprimir: ${error.message}`, 'error');
+            }
+        }
+        
+        // Função para o botão "Todos os Normativos e Referências"
+        function showAllFAQsButton() {
+            activeCategory = null;
+            showingFavorites = false;
+            searchInput.value = '';
+            
+            updateNavigationButtons();
+            renderCategoriesOverview();
+            
+            showStatusMessage('📋 Exibindo todos os Normativos e Referências', 'info');
+        }
+        
+        // Inicializar botão principal de favoritos
+        function initFavoritesMainButton() {
+            const favoritesMainToggle = document.getElementById('favorites-main-toggle');
+            const mainFavoritesCounter = document.getElementById('main-favorites-counter');
+            
+            if (favoritesMainToggle) {
+                favoritesMainToggle.addEventListener('click', function() {
+                    activeCategory = null;
+                    showingFavorites = true;
+                    
+                    searchInput.value = '';
+                    
+                    showFavorites();
+                });
+            }
+            
+            if (mainFavoritesCounter) {
+                mainFavoritesCounter.textContent = favorites.length;
+            }
+        }
+        
+        // Aplicar filtros aos cards existentes
+        function applyFiltersToCards(faqsToRender) {
+            const allCards = document.querySelectorAll('.category-card');
+            const searchTerm = searchInput.value.trim();
+            let hasResults = false;
+            
+            const filteredFAQsMap = new Map();
+            faqsToRender.forEach(faq => {
+                if (!filteredFAQsMap.has(faq.category)) {
+                    filteredFAQsMap.set(faq.category, []);
+                }
+                filteredFAQsMap.get(faq.category).push(faq);
+            });
+            
+            allCards.forEach(card => {
+                const categoryId = card.getAttribute('data-category');
+                const filteredFAQsForCategory = filteredFAQsMap.get(categoryId) || [];
+                
+                if (filteredFAQsForCategory.length === 0) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                    hasResults = true;
+                    
+                    const countElement = card.querySelector('.category-count');
+                    if (countElement) {
+                        const count = filteredFAQsForCategory.length;
+                        countElement.textContent = `${count} pergunta${count !== 1 ? 's' : ''}`;
+                    }
+                    
+                    const faqListContainer = card.querySelector('.faq-list');
+                    if (faqListContainer) {
+                        faqListContainer.innerHTML = renderCategoryFAQs(filteredFAQsForCategory);
+                    }
+                    
+                    if (searchTerm || showingFavorites) {
+                        card.classList.add('expanded');
+                    }
+                    
+                    if (searchTerm) {
+                        card.style.border = '2px solid var(--ms-blue)';
+                        card.style.boxShadow = '0 4px 16px rgba(0, 120, 212, 0.2)';
+                    } else {
+                        card.style.border = '';
+                        card.style.boxShadow = '';
+                    }
+                }
+            });
+            
+            setupFAQListeners();
+            configureExternalLinks();
+            
+            if (searchTerm && hasResults) {
+                setTimeout(() => {
+                    const firstVisibleCard = document.querySelector('.category-card[style*="block"], .category-card:not([style*="none"])');
+                    if (firstVisibleCard) {
+                        firstVisibleCard.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                    }
+                }, 200);
+            }
+            
+            if (!hasResults) {
+                const overviewContainer = document.querySelector('.categories-overview .categories-grid');
+                if (overviewContainer) {
+                    overviewContainer.innerHTML = `
+                        <div class="no-results" style="grid-column: 1; text-align: center; padding: 3rem 2rem;">
+                            <h3>🔍 Nenhum resultado encontrado</h3>
+                            <p>Tente usar termos diferentes ou ${showingFavorites ? 'adicione mais favoritos' : 'categorias mais amplas'}.</p>
+                            <button class="back-to-overview-btn" onclick="clearAllFilters()" style="margin-top: 1rem; border: none; background: var(--ms-blue); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                                <i class="ri-refresh-line"></i> Limpar Filtros
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // Limpar todos os filtros
+        function clearAllFilters() {
+            searchInput.value = '';
+            activeCategory = null;
+            showingFavorites = false;
+            
+            renderCategoriesOverview();
+        }
+        
+        // Expandir todos os Normativos e Referências na vista dedicada
+        function expandAllDedicatedFAQs() {
+            const allFaqItems = document.querySelectorAll('.dedicated-content .faq-item');
+            allFaqItems.forEach(faq => {
+                faq.classList.add('expanded');
+            });
+            
+            const expandBtn = document.querySelector('.expand-all-dedicated-btn');
+            const collapseBtn = document.querySelector('.collapse-all-dedicated-btn');
+            
+            if (expandBtn) expandBtn.style.display = 'none';
+            if (collapseBtn) collapseBtn.style.display = 'flex';
+            
+            showStatusMessage(`🔽 Todos os ${allFaqItems.length} Normativos e Referências expandidos`, 'success');
+        }
+        
+        // Recolher todos os Normativos e Referências na vista dedicada
+        function collapseAllDedicatedFAQs() {
+            const allFaqItems = document.querySelectorAll('.dedicated-content .faq-item');
+            allFaqItems.forEach(faq => {
+                faq.classList.remove('expanded');
+            });
+            
+            const expandBtn = document.querySelector('.expand-all-dedicated-btn');
+            const collapseBtn = document.querySelector('.collapse-all-dedicated-btn');
+            
+            if (expandBtn) expandBtn.style.display = 'flex';
+            if (collapseBtn) collapseBtn.style.display = 'none';
+            
+            showStatusMessage(`🔼 Todos os ${allFaqItems.length} Normativos e Referências recolhidos`, 'info');
+        }
+        
+        // Event listeners
+        searchBtn.addEventListener('click', filterFAQs);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                filterFAQs();
+            }
+        });
+        
+        // Modificar renderFAQs e filterFAQs 
+        const originalRenderFAQs = renderFAQs;
+        renderFAQs = function(faqsToRender) {
+            originalRenderFAQs(faqsToRender);
+            
+            if (faqsToRender && faqsToRender.length > 0) {
+                showNavigationSystem();
+            }
+        };
+        
+        const originalFilterFAQs = filterFAQs;
+        filterFAQs = function() {
+            originalFilterFAQs();
+            updateNavigationButtons();
+        };
+        
+        // Inicializar aplicativo quando a página carrega
+        window.addEventListener('load', function() {
+            initApp();
+            initFavoritesMainButton();
+            initNavigationSystem();
+        });
+        
+        // Detecção automática de modo escuro
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+
+</body>
+</html>
