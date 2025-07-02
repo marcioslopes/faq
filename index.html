@@ -1685,16 +1685,17 @@
         // ✅ VERIFICAÇÃO DE CONECTIVIDADE MELHORADA
         async function checkConnectivity() {
             try {
-                const response = await fetch('https://httpbin.org/get', {
+                // Teste básico de conectividade
+                const response = await fetch('https://cdn.jsdelivr.net/npm/axios@1.6.0/package.json', {
                     method: 'HEAD',
-                    mode: 'no-cors',
+                    mode: 'cors',
                     cache: 'no-cache'
                 });
-                return true;
+                return response.ok;
             } catch {
                 try {
-                    // Fallback para outro teste de conectividade
-                    const response = await fetch('https://www.google.com', {
+                    // Fallback no-cors
+                    await fetch('https://www.google.com/favicon.ico', {
                         method: 'HEAD',
                         mode: 'no-cors',
                         cache: 'no-cache'
@@ -1702,6 +1703,83 @@
                     return true;
                 } catch {
                     return false;
+                }
+            }
+        }
+        
+        // ✅ FUNÇÃO PARA TENTAR DOWNLOAD COM DIFERENTES ESTRATÉGIAS
+        async function tryFetchWithFallbacks(url, urlType) {
+            const strategies = [
+                // Estratégia 1: CORS normal
+                {
+                    mode: 'cors',
+                    credentials: 'omit',
+                    headers: {
+                        'Accept': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/octet-stream,*/*',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                },
+                // Estratégia 2: CORS com headers mínimos
+                {
+                    mode: 'cors',
+                    credentials: 'omit',
+                    headers: {
+                        'Accept': '*/*'
+                    }
+                },
+                // Estratégia 3: no-cors (só para verificar se o arquivo existe)
+                {
+                    mode: 'no-cors',
+                    credentials: 'omit'
+                }
+            ];
+            
+            for (let i = 0; i < strategies.length; i++) {
+                try {
+                    console.log(`Tentando estratégia ${i + 1} para ${urlType}:`, strategies[i]);
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
+                    
+                    const response = await fetch(url, {
+                        ...strategies[i],
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    // Para modo no-cors, não conseguimos verificar status, então assumimos sucesso
+                    if (strategies[i].mode === 'no-cors') {
+                        // Tentar novamente com CORS depois de confirmar que arquivo existe
+                        console.log(`Arquivo encontrado via no-cors, tentando download com CORS...`);
+                        return await tryFetchWithFallbacks(url, urlType); // Recursão com estratégias anteriores
+                    }
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const blob = await response.blob();
+                    
+                    if (blob.size === 0) {
+                        throw new Error(`Arquivo vazio recebido`);
+                    }
+                    
+                    if (blob.size < 1000) {
+                        throw new Error(`Arquivo muito pequeno (${blob.size} bytes)`);
+                    }
+                    
+                    console.log(`✅ Sucesso com estratégia ${i + 1} para ${urlType}: ${blob.size} bytes`);
+                    return blob;
+                    
+                } catch (error) {
+                    console.warn(`❌ Estratégia ${i + 1} falhou para ${urlType}:`, error.message);
+                    
+                    if (i === strategies.length - 1) {
+                        throw error; // Última estratégia, propagar erro
+                    }
+                    // Continuar para próxima estratégia
                 }
             }
         }
@@ -1764,29 +1842,8 @@
                     }
                 }
                 
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
-                
-                // ✅ HEADERS MELHORADOS PARA CORS
-                const response = await fetch(currentUrl, {
-                    signal: controller.signal,
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/octet-stream,*/*',
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache'
-                    },
-                    mode: 'cors',
-                    credentials: 'omit'
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText} (${urlType})`);
-                }
-                
-                const blob = await response.blob();
+                // ✅ USAR NOVA ESTRATÉGIA DE MÚLTIPLOS FALLBACKS
+                const blob = await tryFetchWithFallbacks(currentUrl, urlType);
                 
                 if (blob.size === 0) {
                     throw new Error(`Arquivo vazio recebido de ${urlType}`);
