@@ -1555,7 +1555,7 @@
     <div class="keyboard-shortcuts" id="keyboard-shortcuts">
         <div class="shortcuts-header">
             <span>Atalhos de Teclado</span>
-            <button class="shortcuts-close" onclick="hideKeyboardShortcuts()">
+            <button class="shortcuts-close" onclick="hideKeyboardShortcuts()" title="Fechar">
                 <i class="ri-close-line"></i>
             </button>
         </div>
@@ -1616,8 +1616,10 @@
         const CONFIG = {
             autoLoad: true, // Se deve tentar carregar automaticamente
             fallbackUrls: [
-                "https://cdn.jsdelivr.net/gh/marcioslopes/faq@main/data/faqdatabase.docx", // jsDelivr CDN (melhor CORS)
-                "https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx" // GitHub Raw como fallback
+                "./data/faqdatabase.docx", // Arquivo local no mesmo domínio (sem CORS)
+                "data/faqdatabase.docx", // Caminho relativo alternativo
+                "https://cdn.jsdelivr.net/gh/marcioslopes/faq@main/data/faqdatabase.docx", // jsDelivr CDN
+                "https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx" // GitHub Raw
             ],
             fallbackToManual: true, // Se deve mostrar upload manual em caso de falha
             retryAttempts: 3, // Número de tentativas antes do fallback
