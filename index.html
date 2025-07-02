@@ -1612,16 +1612,21 @@
     </footer>
 
     <script>
-        // Configuração para carregamento automático do GitHub
+        // ✅ CONFIGURAÇÃO MELHORADA com múltiplas URLs e fallbacks
         const CONFIG = {
             autoLoad: true, // Se deve tentar carregar automaticamente
-            githubUrl: "https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx", // URL do arquivo no GitHub
+            fallbackUrls: [
+                "https://cdn.jsdelivr.net/gh/marcioslopes/faq@main/data/faqdatabase.docx", // jsDelivr CDN (melhor CORS)
+                "https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx" // GitHub Raw como fallback
+            ],
             fallbackToManual: true, // Se deve mostrar upload manual em caso de falha
-            retryAttempts: 2, // Número de tentativas antes do fallback
-            retryDelay: 1000 // Delay entre tentativas (ms)
+            retryAttempts: 3, // Número de tentativas antes do fallback
+            retryDelay: 1500, // Delay entre tentativas (ms)
+            timeout: 20000 // Timeout aumentado para 20 segundos
         };
         
         let autoLoadAttempted = false;
+        let currentUrlIndex = 0; // Para controlar qual URL está sendo testada
 
         // Categorias predefinidas conforme especificação
         const predefinedCategories = [
@@ -1677,6 +1682,30 @@
         let localStorageAvailable = false;
         let hasShownStorageWarning = false;
         
+        // ✅ VERIFICAÇÃO DE CONECTIVIDADE MELHORADA
+        async function checkConnectivity() {
+            try {
+                const response = await fetch('https://httpbin.org/get', {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                });
+                return true;
+            } catch {
+                try {
+                    // Fallback para outro teste de conectividade
+                    const response = await fetch('https://www.google.com', {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        cache: 'no-cache'
+                    });
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        }
+        
         // Mostrar mensagem de status
         function showStatusMessage(message, type = 'info') {
             statusMessage.innerHTML = message;
@@ -1695,82 +1724,113 @@
             statusMessage.style.display = 'none';
         }
         
-        // Carregar base de dados do GitHub
-        async function loadFromGitHub(attempt = 1) {
+        // ✅ FUNÇÃO DE CARREGAMENTO MELHORADA COM MÚLTIPLAS URLs
+        async function loadFromGitHub(attempt = 1, urlIndex = 0) {
             if (autoLoadAttempted && attempt === 1) {
                 return;
             }
             
+            // Se não há mais URLs para tentar
+            if (urlIndex >= CONFIG.fallbackUrls.length) {
+                autoLoadAttempted = true;
+                showStatusMessage(`
+                    <strong>⚠️ Carregamento automático falhou</strong><br>
+                    Todas as fontes tentadas falharam.<br>
+                    <em>Use o upload manual abaixo ou verifique sua conexão</em>
+                `, 'error');
+                
+                if (CONFIG.fallbackToManual) {
+                    showManualUploadInterface();
+                    const retryBtn = document.getElementById('retry-github-btn');
+                    if (retryBtn) {
+                        retryBtn.style.display = 'flex';
+                    }
+                }
+                return;
+            }
+            
+            const currentUrl = CONFIG.fallbackUrls[urlIndex];
+            const urlType = currentUrl.includes('jsdelivr') ? 'jsDelivr CDN' : 'GitHub Raw';
+            
             try {
-                showStatusMessage(`🌐 Tentativa ${attempt}/${CONFIG.retryAttempts} - Carregando base de dados do GitHub...`, 'info');
+                showStatusMessage(`🌐 Tentativa ${attempt}/${CONFIG.retryAttempts} - Carregando via ${urlType}...`, 'info');
                 loading.style.display = 'flex';
                 
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout
+                // ✅ VERIFICAR CONECTIVIDADE PRIMEIRO
+                if (attempt === 1 && urlIndex === 0) {
+                    const isOnline = await checkConnectivity();
+                    if (!isOnline) {
+                        throw new Error('Sem conexão com a internet');
+                    }
+                }
                 
-                const response = await fetch(CONFIG.githubUrl, {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
+                
+                // ✅ HEADERS MELHORADOS PARA CORS
+                const response = await fetch(currentUrl, {
                     signal: controller.signal,
                     method: 'GET',
                     headers: {
-                        'Cache-Control': 'no-cache'
-                    }
+                        'Accept': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/octet-stream,*/*',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    },
+                    mode: 'cors',
+                    credentials: 'omit'
                 });
                 
                 clearTimeout(timeoutId);
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText} (${urlType})`);
                 }
                 
                 const blob = await response.blob();
                 
                 if (blob.size === 0) {
-                    throw new Error('Arquivo vazio recebido do GitHub');
+                    throw new Error(`Arquivo vazio recebido de ${urlType}`);
+                }
+                
+                if (blob.size < 1000) { // Arquivo muito pequeno, provavelmente erro
+                    throw new Error(`Arquivo muito pequeno (${blob.size} bytes) de ${urlType}`);
                 }
                 
                 clearStatusMessage();
-                showStatusMessage('🔄 Processando arquivo baixado do GitHub...', 'info');
+                showStatusMessage(`🔄 Processando arquivo baixado de ${urlType}...`, 'info');
                 
                 await processWordDocument(blob);
                 hideManualUploadInterface();
                 autoLoadAttempted = true;
                 
-                showStatusMessage(`✅ ${faqs.length} FAQs carregadas automaticamente do GitHub!`, 'success');
+                showStatusMessage(`✅ ${faqs.length} FAQs carregadas automaticamente de ${urlType}!`, 'success');
                 
             } catch (error) {
                 loading.style.display = 'none';
-                console.warn(`Tentativa ${attempt} falhou:`, error);
+                console.warn(`Tentativa ${attempt} com ${urlType} falhou:`, error);
+                
+                const errorMessage = error.name === 'AbortError' ? 
+                    `Timeout: ${urlType} demorou muito para responder` :
+                    error.message;
                 
                 if (attempt < CONFIG.retryAttempts) {
-                    showStatusMessage(`⚠️ Tentativa ${attempt} falhou. Tentando novamente em ${CONFIG.retryDelay/1000}s...`, 'info');
+                    // Tentar novamente com a mesma URL
+                    showStatusMessage(`⚠️ ${urlType} falhou. Tentando novamente em ${CONFIG.retryDelay/1000}s...`, 'info');
                     
                     setTimeout(() => {
-                        loadFromGitHub(attempt + 1);
+                        loadFromGitHub(attempt + 1, urlIndex);
                     }, CONFIG.retryDelay);
                     
                 } else {
-                    // Todas as tentativas falharam
-                    autoLoadAttempted = true;
-                    
-                    const errorMessage = error.name === 'AbortError' ? 
-                        'Timeout: GitHub demorou muito para responder' :
-                        error.message;
-                    
-                    if (CONFIG.fallbackToManual) {
-                        showStatusMessage(`
-                            <strong>⚠️ Carregamento automático falhou</strong><br>
-                            Erro: ${errorMessage}<br>
-                            <em>Use o upload manual abaixo ou tente novamente</em>
-                        `, 'error');
-                        showManualUploadInterface();
-                        
-                        // Mostrar botão "Tentar GitHub" novamente
-                        const retryBtn = document.getElementById('retry-github-btn');
-                        if (retryBtn) {
-                            retryBtn.style.display = 'flex';
-                        }
+                    // Tentar próxima URL
+                    if (urlIndex + 1 < CONFIG.fallbackUrls.length) {
+                        showStatusMessage(`⚠️ ${urlType} falhou. Tentando próxima fonte...`, 'info');
+                        setTimeout(() => {
+                            loadFromGitHub(1, urlIndex + 1); // Reset attempt para nova URL
+                        }, 1000);
                     } else {
-                        showStatusMessage(`❌ Erro ao carregar do GitHub: ${errorMessage}`, 'error');
+                        // Todas as URLs falharam
+                        loadFromGitHub(1, urlIndex + 1); // Isso irá chamar o erro final
                     }
                 }
             }
@@ -1781,8 +1841,8 @@
             try {
                 loadFavorites();
                 
-                if (CONFIG.autoLoad && CONFIG.githubUrl && !autoLoadAttempted) {
-                    // Tentar carregamento automático do GitHub
+                if (CONFIG.autoLoad && CONFIG.fallbackUrls.length > 0 && !autoLoadAttempted) {
+                    // Tentar carregamento automático
                     loadFromGitHub();
                     
                     if (CONFIG.fallbackToManual) {
@@ -1791,7 +1851,7 @@
                             if (!autoLoadAttempted || faqs.length === 0) {
                                 showManualUploadInterface();
                             }
-                        }, 5000); // Se não carregar em 5s, mostra upload manual
+                        }, 8000); // Aumentado para 8s para dar mais tempo
                     }
                 } else {
                     // Carregar diretamente interface manual
@@ -1805,12 +1865,13 @@
                 const retryGitHubBtn = document.getElementById('retry-github-btn');
                 if (retryGitHubBtn) {
                     retryGitHubBtn.addEventListener('click', function() {
-                        if (CONFIG.githubUrl) {
+                        if (CONFIG.fallbackUrls.length > 0) {
                             autoLoadAttempted = false; // Reset flag
+                            currentUrlIndex = 0; // Reset URL index
                             hideManualUploadInterface();
                             loadFromGitHub();
                         } else {
-                            showStatusMessage('❌ URL do GitHub não configurada!', 'error');
+                            showStatusMessage('❌ URLs de GitHub não configuradas!', 'error');
                         }
                     });
                 }
