@@ -1706,7 +1706,7 @@
                 loading.style.display = 'flex';
                 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout
                 
                 const response = await fetch(CONFIG.githubUrl, {
                     signal: controller.signal,
