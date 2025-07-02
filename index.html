@@ -1616,10 +1616,9 @@
         const CONFIG = {
             autoLoad: true, // Se deve tentar carregar automaticamente
             githubUrl: "https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx", // URL do arquivo no GitHub
-            <a href="https://raw.githubusercontent.com/marcioslopes/faq/main/data/faqdatabase.docx" download></a>
-	    fallbackToManual: true, // Se deve mostrar upload manual em caso de falha
-            retryAttempts: 2, // Número de tentativas antes do fallback
+            retryAttempts: 5, // Número de tentativas antes do fallback
             retryDelay: 1000 // Delay entre tentativas (ms)
+            fallbackToManual: true, // Se deve mostrar upload manual em caso de falha		
         };
         
         let autoLoadAttempted = false;
