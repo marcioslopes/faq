@@ -1,0 +1,116 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checklist do Documento de Formalização da Demanda - DFD</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #f3f3f3; /* Cinza claro */
+      color: #1a1a1a; /* Preto suave */
+    }
+    h1 {
+      text-align: center;
+      color: #0078d4; /* Azul Microsoft */
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #ffffff; /* Branco */
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    li ul {
+      margin-top: 8px;
+      margin-left: 30px;
+    }
+    li ul li {
+      background: none;
+      box-shadow: none;
+      padding: 4px 0;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      margin-top: 4px;
+      transform: scale(1.3);
+    }
+    .checked {
+      text-decoration: line-through;
+     color: #767676; /* Cinza médio */
+    }
+.link-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    text-decoration: none;
+    color: #323130;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 18px;
+}
+
+.link-button:hover {
+    background-color: #f2f2f2;
+    text-decoration: none;
+}
+
+.link-button.active {
+    background-color: #0078d4;
+    color: white;
+    border-color: #0078d4;
+}
+
+</style>
+</head>
+<body>
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: right;">
+    <a href="https://sites.google.com/view/faqartefatos/portal-de-faq-gprol?authuser=1" class="link-button active">Fechar</a>
+</div>
+
+  <h1>Checklist</h1>
+  <h1>Documento de Formalização da Demanda - DFD</h1>
+
+  <ul id="checklist">
+    <li><input type="checkbox" /> Identificação da área requisitante da demanda/projeto.</li>
+    <li><input type="checkbox" /> Integrantes da equipe envolvida com o desenvolvimento do projeto/atendimento da demanda.</li>
+    <li><input type="checkbox" /> Justificativa/motivação da contratação.</li>
+    <li><input type="checkbox" /> Descrição sucinta do objeto da contratação.</li>
+    <li><input type="checkbox" /> Alinhamento da demanda com os objetivos estratégicos do órgão.</li>
+    <li><input type="checkbox" /> Indicação das necessidades de contratação de bens e serviços para satisfazer a demanda ou desenvolver o projeto.</li>
+    <li><input type="checkbox" /> Quantidade a ser contratada, quando couber, considerada a expectativa de consumo anual.</li>
+    <li><input type="checkbox" /> Estimativa preliminar do valor da contratação, quando couber, considerada a expectativa de consumo anual.</li>
+    <li><input type="checkbox" /> Indicação da data pretendida para a conclusão da contratação, a fim de não gerar prejuízo ou descontinuidade das atividades do órgão ou da entidade.</li>
+    <li><input type="checkbox" /> Indicação de vinculação ou dependência com o objeto de outro documento de formalização da demanda para a sua execução.</li>
+    <li><input type="checkbox" /> Especificações detalhadas (dos requisitos) para desenvolver o pré-projeto.</li>
+    <li><input type="checkbox" /> Resultados a serem produzidos (entregas).</li>
+    <li><input type="checkbox" /> Beneficiados ou interessados (interno/externo).</li>
+    <li><input type="checkbox" /> Metas e respectivas métricas a serem alcançadas em um dado prazo.</li>
+    <li><input type="checkbox" /> Grau de prioridade e justificativa do grau de prioridade (baixa, média, alta).</li>
+  </ul>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: right;">
+    <a href="https://sites.google.com/view/faqartefatos/portal-de-faq-gprol?authuser=1" class="link-button active">Fechar</a>
+</div>
+  <script>
+    const checklist = document.getElementById('checklist');
+    checklist.addEventListener('change', function(e) {
+      if (e.target.tagName === 'INPUT') {
+        e.target.parentElement.classList.toggle('checked', e.target.checked);
+      }
+    });
+  </script>
+
+</body>
+</html>
