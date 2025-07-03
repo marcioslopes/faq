@@ -1856,7 +1856,7 @@
                 }
                 
                 clearStatusMessage();
-                showStatusMessage(`🔄 Processando arquivo baixado de ${urlType}...`, 'info');
+                showStatusMessage(`🔄 Processando...`, 'info');
                 
                 await processWordDocument(blob);
                 hideManualUploadInterface();
@@ -1983,7 +1983,7 @@
                 faqResults.innerHTML = '';
                 clearStatusMessage();
                 
-                showStatusMessage('Processando arquivo Word...', 'info');
+                showStatusMessage('Processando...', 'info');
                 
                 await processWordDocument(file);
                 hideManualUploadInterface();
