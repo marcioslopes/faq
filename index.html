@@ -1833,7 +1833,7 @@
             const urlType = currentUrl.includes('jsdelivr') ? 'jsDelivr CDN' : 'GitHub Raw';
             
             try {
-                showStatusMessage(`🌐 Tentativa ${attempt}/${CONFIG.retryAttempts} - Carregando via ${urlType}...`, 'info');
+                showStatusMessage(`🌐 Tentativa ${attempt}/${CONFIG.retryAttempts} - Carregando...`, 'info');
                 loading.style.display = 'flex';
                 
                 // ✅ VERIFICAR CONECTIVIDADE PRIMEIRO
