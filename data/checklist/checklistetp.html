@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist de Estudo Técnico Preliminar - ETP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #f3f3f3;
+      color: #1a1a1a;
+    }
+    h1 {
+      text-align: center;
+      color: #0078d4;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #ffffff;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    li ul {
+      margin-top: 8px;
+      margin-left: 30px;
+    }
+    li ul li {
+      background: none;
+      box-shadow: none;
+      padding: 4px 0;
+      position: relative;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      margin-top: 4px;
+      transform: scale(1.3);
+    }
+    .checked {
+      text-decoration: line-through;
+      color: #767676;
+    }
+    .info-icon {
+      font-size: 18px;
+      color: #0078d4;
+      cursor: pointer;
+      margin-left: 10px;
+      position: relative;
+    }
+    .tooltip {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal; /* Permite quebras de linha naturais */
+        max-width: 750px;
+        display: none;
+        position: absolute;
+        background-color: #0078d4;
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 15px;
+        font-size: 13px;
+        top: 15%;
+        left: 20px;
+        z-index: 1000;
+    }
+    .info-icon:hover + .tooltip {
+      display: block;
+    }
+.link-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    text-decoration: none;
+    color: #323130;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 18px;
+}
+
+.link-button:hover {
+    background-color: #f2f2f2;
+    text-decoration: none;
+}
+
+.link-button.active {
+    background-color: #0078d4;
+    color: white;
+    border-color: #0078d4;
+}
+  </style>
+</head>
+<body>
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: right;">
+    <a href="https://sites.google.com/view/faqartefatos/portal-de-faq-gprol?authuser=1" class="link-button active">Fechar</a>
+</div>
+
+  <h1>Checklist</h1>
+  <h1>Documento do Estudo Técnico Preliminar - ETP</h1>
+
+  <ul id="checklist">
+    <li><input type="checkbox" /> 1. Informações básicas
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 1.1. Número do Processo Sei</li>
+        <li><input type="checkbox" /> 1.2. Categoria do ETP</li>
+        <li><input type="checkbox" /> 1.3. Responsáveis Pela Elaboração do ETP</li>
+      </ul>
+    </li>
+    <li><input type="checkbox" /> 2. Descrição da necessidade da contratação, considerando o problema a ser resolvido sob a perspectiva do interesse público
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 2.1. Descrição da Necessidade</li>
+        <li><input type="checkbox" /> 2.2. Área Requisitante</li>
+      </ul>
+    </li>
+    <li><input type="checkbox" /> 3. Requisitos da Contratação prevendo critérios e práticas de sustentabilidade, bem como padrões mínimos de qualidade e desempenho
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 3.1. Padrões Mínimos de Qualidade</li>
+        <li><input type="checkbox" /> 3.2. Exigência de Amostras</li>
+        <li><input type="checkbox" /> 3.3. Natureza da Contratação</li>
+        <li><input type="checkbox" /> 3.4. Critérios e Práticas de Sustentabilidade</li>
+        <li><input type="checkbox" /> 3.5. Exigência de Amostra e Justificativas</li>
+        <li><input type="checkbox" /> 3.6. Exigência ou Vedação de Marcas/Modelos e Justificativas</li>
+        <li><input type="checkbox" /> 3.7. Vedação Quanto aos Bens de Luxo</li>
+        <li><input type="checkbox" /> 3.8. Garantia do Itens/Objeto</li>
+        <li><input type="checkbox" /> 3.9. Subcontratação em situações excepcionais e devidamente autorizada</li>
+     </ul>        
+     </li>
+ <li><input type="checkbox" /> 4. Levantamento de mercado
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+     <ul>
+        <li><input type="checkbox" /> 4.1. Análise de Alternativas Possíveis</li>
+        <li><input type="checkbox" /> 4.2. Fontes de Pesquisa Utilizada</li>
+        <li><input type="checkbox" /> 4.3. Justificativa Técnica e Econômica da Escolha</li>
+        <li><input type="checkbox" /> 4.4. Metodologia Adotada e Critérios Para Seleção dos Fornecedores Consultados</li>
+        <li><input type="checkbox" /> 4.5. Avaliação da Restrição de Mercado</li>
+        <li><input type="checkbox" /> 4.6. Registro de Comunicações e Interações com o Mercado</li>
+        <li><input type="checkbox" /> 4.7. Análise Comparativa de Custos e Benefícios</li>
+        <li><input type="checkbox" /> 4.8. Indicação da Alternativa Mais Vantajosa</li>
+      </ul>
+     </li>
+    <li><input type="checkbox" /> 5. Descrição da solução como um todo
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" />5.1. Especificações Técnicas Necessárias</li>
+        <li><input type="checkbox" />5.2. Aspectos Normativos da Solução</li>
+        <li><input type="checkbox" />5.3. Exigências Relacionadas à Manutenção</li>
+        <li><input type="checkbox" />5.4. Exigências Relacionadas à Assistência Técnica</li>
+        <li><input type="checkbox" />5.5. Exigências de Garantia</li>
+        <li><input type="checkbox" />5.6. Ciclo de Vida do Objeto</li>
+        <li><input type="checkbox" />5.7. Indicação do Parcelamento ou não da Contratação</li>
+        <li><input type="checkbox" />5.8. Exigência de Qualificação Técnica ou Econômica e devidas justificativas</li>
+        <li><input type="checkbox" />5.9. Justificativa Técnica e Econômica da Solução Escolhida</li>
+      </ul>
+    </li>
+    <li><input type="checkbox" />6. Estimativa das quantidades a serem contratadas
+     <span class="info-icon">ℹ️</span><span class="tooltip">
+      <br><br>
+      <b> 6.1. "Descrição dos quantitativos previstos e justificativas"</b>, deve-se ser descritas a indicação clara das quantidades estimadas para cada item ou serviço a ser contratado, de acordo com a demanda prevista.<br><br><br>
+     <b> 6.2. "Metodologia utilizada para apuração da estimativa"</b>, deve-se ser descrita explicação detalhada do método utilizado para calcular as quantidades, incluindo referências a séries históricas, médias de consumo, projeções, benchmarking, ou outros instrumentos técnicos.
+     <br><br><br>
+     <b> 6.3. "Memória de cálculo"</b>, deve-se efetuar a apresentação dos cálculos realizados, com tabelas, fórmulas, dados e documentos que comprovem e justifiquem os quantitativos propostos.
+     <br><br><br> 
+     <b> 6.4. "Documentos de suporte à estimativa"</b>, deve-se informar em que local do processo (Link Sei) está localizado relatórios, contratos anteriores, planilhas de consumo, pareceres técnicos e demais documentos que deram suporte à estimativa. Aqui pode-se utilizar um único arquivo em .pdf intitulado de Documentos de suporte à produção da estimativa.pdf.
+     <br><br><br> 
+     <b> 6.5. "Consideração de interdependências e economia de escala"</b>, deve-se ser descritas as avaliações das possíveis interações com outras contratações planejadas, visando identificar oportunidades de compras conjuntas e ganhos de escala.</span>
+      <ul>
+        <li><input type="checkbox" /> 6.1. Descrição dos quantitativos previstos e justificativas</li>
+        <li><input type="checkbox" /> 6.2. Metodologia utilizada para apuração da estimativa</li>
+        <li><input type="checkbox" /> 6.3. Memória de cálculo</li>
+        <li><input type="checkbox" /> 6.4. Documentos que deram suporte à estimativa</li>
+        <li><input type="checkbox" /> 6.5. Considerações de interdependência e economia de escala</li>        
+      </ul>
+    </li>
+    <li><input type="checkbox" />7. Estimativa do valor da contratação
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+<ul>
+        <li><input type="checkbox" /> 7.1. Valor estimado da contratação</li>
+        <li><input type="checkbox" /> 7.2.  Metodologia utilizada para apuração do valor da contratação</li>
+        <li><input type="checkbox" /> 7.3. Preços unitários referenciais</li>
+        <li><input type="checkbox" /> 7.4. Memória de cálculo</li>
+        <li><input type="checkbox" /> 7.5. Fontes de pesquisa de preços</li>
+        <li><input type="checkbox" /> 7.6. Documentos que deram suporte à pesquisa de preços<br>(poderão constar de anexo qualificados, se a administração optar pelo sigilo até a conclusão da licitação)</li>
+        <li><input type="checkbox" /> 7.7. Consideração de custos diretos e indiretos</li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />8. Justificativa para o parcelamento.
+     <span class="info-icon">ℹ️</span><span class="tooltip">      NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>      <ul>
+        <li><input type="checkbox" /> 8.1. </li>
+        <li><input type="checkbox" /> 8.2. </li>
+        <li><input type="checkbox" /> 8.3. </li>
+        <li><input type="checkbox" /> 8.4. </li>
+        <li><input type="checkbox" /> 8.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />9. Contratações correlatas e interdependentes.
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+    <ul>
+        <li><input type="checkbox" /> 9.1. </li>
+        <li><input type="checkbox" /> 9.2. </li>
+        <li><input type="checkbox" /> 9.3. </li>
+        <li><input type="checkbox" /> 9.4. </li>
+        <li><input type="checkbox" /> 9.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />10. Alinhamento com o planejamento institucional
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 10.1. </li>
+        <li><input type="checkbox" /> 10.2. </li>
+        <li><input type="checkbox" /> 10.3. </li>
+        <li><input type="checkbox" /> 10.4. </li>
+        <li><input type="checkbox" /> 10.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />11. Benefícios esperados da contratação
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 11.1. </li>
+        <li><input type="checkbox" /> 11.2. </li>
+        <li><input type="checkbox" /> 11.3. </li>
+        <li><input type="checkbox" /> 11.4. </li>
+        <li><input type="checkbox" /> 11.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />12. Providências necessárias para a execução
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+    <ul>
+        <li><input type="checkbox" /> 12.1. </li>
+        <li><input type="checkbox" /> 12.2. </li>
+        <li><input type="checkbox" /> 12.3. </li>
+        <li><input type="checkbox" /> 12.4. </li>
+        <li><input type="checkbox" /> 12.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />13. Possíveis impactos ambientais
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 13.1. </li>
+        <li><input type="checkbox" /> 13.2. </li>
+        <li><input type="checkbox" /> 13.3. </li>
+        <li><input type="checkbox" /> 13.4. </li>
+        <li><input type="checkbox" /> 13.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />14. Declaração de viabilidade técnica
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 14.1. </li>
+        <li><input type="checkbox" /> 14.2. </li>
+        <li><input type="checkbox" /> 14.3. </li>
+        <li><input type="checkbox" /> 14.4. </li>
+        <li><input type="checkbox" /> 14.5. </li>        
+      </ul>
+   </li>
+    <li><input type="checkbox" />15. Responsáveis
+     <span class="info-icon">ℹ️</span><span class="tooltip"> NOS SUBTÓPICOS <br><br><br>
+     <b>* "1"</b>, deve-se .<br><br><br>
+     <b>* "2"</b>, deve-se .<br><br><br>
+     <b>* "3"</b>, deve-se .<br><br><br> 
+     </span>
+      <ul>
+        <li><input type="checkbox" /> 15.1. Coordenador</li>
+        <li><input type="checkbox" /> 15.2. Analistas envolvidos</li>
+      </ul>
+    </li>
+  </ul>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: right;">
+    <a href="https://sites.google.com/view/faqartefatos/portal-de-faq-gprol?authuser=1" class="link-button active">Fechar</a>
+</div>
+
+  <script>
+    const checklist = document.getElementById('checklist');
+    checklist.addEventListener('change', function(e) {
+      if (e.target.tagName === 'INPUT') {
+        e.target.parentElement.classList.toggle('checked', e.target.checked);
+      }
+    });
+  </script>
+
+</body>
+</html>
