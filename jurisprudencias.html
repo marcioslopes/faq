@@ -1930,81 +1930,30 @@
                                 const id = cells[0].textContent.trim();
                                 
                                 // Extrair título e URL da segunda coluna
+                                let question = '';
+                                let url = '';
                                 
-
-
-
-				let question = '';
-				let url = '';
-				let additionalText = ''; // Novo campo para o texto após o link
-
-				const questionCell = cells[1];
-				const linkElement = questionCell.querySelector('a');
-
-					if (linkElement) {
-					    // Extrai o texto do link
-					    question = linkElement.textContent.trim();
-					    url = linkElement.href || linkElement.getAttribute('href') || '';
-
-					    // Corrige URL relativa, se necessário
-				        if (url && !url.startsWith('http')) {
-				        const fullUrl = linkElement.getAttribute('title') ||
-		                        linkElement.dataset.url ||
-                			        url;
-					        url = fullUrl;
-					    }
-
-					    // Extrai o conteúdo textual da célula após o link
-				        const allContent = questionCell.innerHTML;
-				        const linkHtml = linkElement.outerHTML;
-
-					    // Pega o que vem depois do <a> e mantém quebras de linha
-				        const parts = allContent.split(linkHtml);
-				        if (parts.length > 1) {
-					        // Substitui <br> por \n e remove espaços em excesso
-				        additionalText = parts[1]
-			 	            .replace(/<br\s*\/?>/gi, '\n')
-				            .replace(/<\/?[^>]+(>|$)/g, '') // remove outras tags HTML
-				            .trim();
-					    }
-					    } else {
-				           // Caso não haja link, pega todo o texto da célula
-					    question = questionCell.textContent.trim();
-					    }
-
-					  // Exibe os dados formatados
-					const container = document.createElement('div');
-					container.innerHTML = `
-				        <strong><a href="${url}" target="_blank">${question}</a></strong><br>
-				        <pre style="white-space: pre-wrap; margin-top: 4px;">${additionalText}</pre>
-					`;
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                const questionCell = cells[1];
+                                const linkElement = questionCell.querySelector('a');
                                 
+                                if (linkElement) {
+                                    // Se existe um link, extrair texto e URL
+                                    question = linkElement.textContent.trim();
+                                    url = linkElement.href || linkElement.getAttribute('href') || '';
+                                    
+                                    // Se a URL for relativa, tentar encontrar uma URL absoluta
+                                    if (url && !url.startsWith('http')) {
+                                        // Tentar extrair uma URL absoluta do texto ou outros atributos
+                                        const fullUrl = linkElement.getAttribute('title') || 
+                                                       linkElement.dataset.url || 
+                                                       url;
+                                        url = fullUrl;
+                                    }
+                                } else {
+                                    // Se não existe link, usar apenas o texto
+                                    question = questionCell.textContent.trim();
+                                }
+                              
                                 let answerHtml = cells[2].innerHTML;
                                 
                                 const tempElement = document.createElement('div');
