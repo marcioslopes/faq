@@ -1576,26 +1576,6 @@
 
 <footer>
          <div class="container footer-content">
-            <div class="footer-column">
-            <h3>Suporte</h3>
-            <ul>
-                <li><a href="#" onclick="openModal()">Contato</a></li>
-            </ul>
-            </div>
-
-            <!-- Modal escondido -->
-            <div id="contactModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>Entre em contato</h2>
-                <p>Email: suporte@empresa.com</p>
-                <p>Telefone: (61) 99999-9999</p>
-                <p>WhatsApp: <a href="https://wa.me/5561999999999" target="_blank">Clique aqui</a></p>
-            </div>
-            </div>
-
-
-
 
             <div class="footer-column">
                 <h3>Recursos</h3>
@@ -3452,19 +3432,6 @@
             showStatusMessage(`🔼 Todos os ${allFaqItems.length} Normativos e Jurisprudências recolhidas`, 'info');
         }
         
-
-        // Funções de abrir e fechar o modal de Contatos Popup
-
-        function openModal() {
-            document.getElementById("contactModal").style.display = "flex";
-            }
-        
-        function closeModal() {
-            document.getElementById("contactModal").style.display = "none";
-            }
-        
-
-
 
         // Event listeners
         searchBtn.addEventListener('click', filterFAQs);
