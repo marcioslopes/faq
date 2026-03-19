@@ -157,6 +157,8 @@
             border-radius: 4px 0 0 4px;
             color: var(--text-primary);
             background-color: var(--background-light);
+            height: 48px;
+            box-sizing: border-box;
         }
 
         .search-container .search-btn {
@@ -167,10 +169,23 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.2s;
+            border-radius: 0 4px 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            min-width: auto;
+            font-weight: 500;
+            white-space: nowrap;
         }
         
         .search-container .search-btn:hover {
             background-color: var(--ms-dark-blue);
+        }
+
+        .search-container .search-btn i {
+            font-size: 18px;
         }
         
         .faq-container {
@@ -479,15 +494,19 @@
             .search-container input {
                 width: 100%;
                 border-radius: 4px 4px 0 0;
-                padding: 18px 20px;
+                padding: 12px 20px;
                 font-size: 16px;
+                height: 48px;
+                box-sizing: border-box;
             }
             
             .search-container .search-btn {
                 width: 100%;
-                padding: 18px;
+                padding: 0 20px;
                 border-radius: 0 0 4px 4px;
                 font-size: 16px;
+                height: 48px;
+                box-sizing: border-box;
             }
             
             .file-upload-container {
@@ -605,13 +624,17 @@
             }
             
             .search-container input {
-                padding: 16px 20px;
+                padding: 12px 20px;
                 font-size: 16px;
+                height: 48px;
+                box-sizing: border-box;
             }
             
             .search-container .search-btn {
-                padding: 16px 20px;
+                padding: 0 20px;
                 font-size: 16px;
+                height: 48px;
+                box-sizing: border-box;
             }
             
             .file-upload-container {
