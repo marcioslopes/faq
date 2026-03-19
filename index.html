@@ -159,22 +159,6 @@
             background-color: var(--background-light);
         }
 
-        .fuzzy-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            padding: 0 8px;
-            border-right: 1px solid #ddd;
-        }
-
-        .fuzzy-toggle input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-        
         .search-container .search-btn {
             padding: 0 20px;
             background-color: var(--ms-blue);
@@ -1578,10 +1562,6 @@
         <div class="container">
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Digite o que procura aqui..." autofocus>
-                <label class="fuzzy-toggle" title="Ativar busca por termos similares">
-                    <input type="checkbox" id="fuzzy-search-checkbox">
-                    Buscar parecido
-                </label>
                 <button class="search-btn" id="search-btn">
                     <i class="ri-search-line"></i> Pesquisar
                 </button>
@@ -1720,7 +1700,6 @@
         // Elementos do DOM
         const searchInput = document.getElementById('search-input');
         const searchBtn = document.getElementById('search-btn');
-        const fuzzySearchCheckbox = document.getElementById('fuzzy-search-checkbox');
         const faqResults = document.getElementById('faq-results');
         const loading = document.getElementById('loading');
         const statusMessage = document.getElementById('status-message');
@@ -1734,8 +1713,6 @@
         let favorites = [];
         let showingFavorites = false;
         let navigationSimple = null;
-        let useFuzzySearch = false;
-        let searchDebounceTimeout = null;
         
         // Mapa de sinônimos e correções comuns
         const synonymMap = {
@@ -2470,15 +2447,6 @@
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
-        // Debounce (evita chamadas excessivas durante digitação)
-        function debounce(fn, delay) {
-            let timeoutId;
-            return function(...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => fn.apply(this, args), delay);
-            };
-        }
-        
         // Função para calcular distância de Levenshtein
         function levenshteinDistance(str1, str2) {
             const matrix = [];
@@ -2520,7 +2488,7 @@
         }
         
         // Função para calcular score de relevância (busca mais precisa)
-        function calculateRelevanceScore(faq, searchTerms, originalSearchTerm, useFuzzy = false) {
+        function calculateRelevanceScore(faq, searchTerms, originalSearchTerm) {
             const questionText = normalizeText(faq.question);
             const answerText = normalizeText(faq.answer);
 
@@ -2567,35 +2535,14 @@
             let score = 0;
             const foundTerms = new Set();
 
-            const tryFuzzyMatch = (text, source) => {
-                const wordsInText = text.split(/\s+/);
-                const maxDistance = word.length <= 4 ? 1 : 2;
-
-                for (const candidate of wordsInText) {
-                    if (!candidate) continue;
-                    const distance = levenshteinDistance(word, candidate);
-                    if (distance <= maxDistance) {
-                        if (source === 'question') score += 20;
-                        if (source === 'answer') score += 10;
-                        foundTerms.add(candidate);
-                        return true;
-                    }
-                }
-                return false;
-            };
-
             if (wordRegex.test(questionText)) {
                 score += 40;
                 foundTerms.add(word);
-            } else if (useFuzzy) {
-                tryFuzzyMatch(questionText, 'question');
             }
 
             if (wordRegex.test(answerText)) {
                 score += 20;
                 foundTerms.add(word);
-            } else if (useFuzzy) {
-                tryFuzzyMatch(answerText, 'answer');
             }
 
             return { score, foundTerms: Array.from(foundTerms) };
@@ -2615,7 +2562,7 @@
                 const expandedTerms = expandSearchTerms(originalSearchTerm);
                 
                 const faqsWithScore = filteredFAQs.map(faq => {
-                    const relevance = calculateRelevanceScore(faq, expandedTerms, originalSearchTerm, useFuzzySearch);
+                    const relevance = calculateRelevanceScore(faq, expandedTerms, originalSearchTerm);
                     return {
                         ...faq,
                         relevanceScore: relevance.score,
@@ -3558,29 +3505,10 @@
         
 
         // Event listeners
-        const debouncedFilter = debounce(() => {
-            useFuzzySearch = fuzzySearchCheckbox ? fuzzySearchCheckbox.checked : false;
-            filterFAQs();
-        }, 250);
-
-        searchBtn.addEventListener('click', () => {
-            useFuzzySearch = fuzzySearchCheckbox ? fuzzySearchCheckbox.checked : false;
-            filterFAQs();
-        });
-
-        if (fuzzySearchCheckbox) {
-            fuzzySearchCheckbox.addEventListener('change', () => {
-                useFuzzySearch = fuzzySearchCheckbox.checked;
-                filterFAQs();
-            });
-        }
-
+        searchBtn.addEventListener('click', filterFAQs);
         searchInput.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
-                useFuzzySearch = fuzzySearchCheckbox ? fuzzySearchCheckbox.checked : false;
                 filterFAQs();
-            } else {
-                debouncedFilter();
             }
         });
         
