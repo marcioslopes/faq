@@ -2279,6 +2279,7 @@
                 if (count === 0) return;
                 
                 const categoryIcon = getCategoryIcon(category.id);
+                const renderResult = renderCategoryFAQs(categoryFaqs);
                 
                 overviewHTML += `
                     <div class="category-card" data-category="${category.id}">
@@ -2298,7 +2299,7 @@
                         </div>
                         <div class="category-content">
                             <div class="faq-list">
-                                ${renderCategoryFAQs(categoryFaqs)}
+                                ${renderResult.html}
                             </div>
                         </div>
                     </div>
@@ -2311,6 +2312,9 @@
             `;
             
             faqResults.innerHTML = overviewHTML;
+            
+            // Injetar HTML destacado após renderizar
+            injectHighlightedContent();
             setupCategoryListeners();
         }
         
@@ -2336,10 +2340,17 @@
                     `;
                 }
                 
+                // Usar texto destacado se disponível, senão usar texto normal
+                const questionText = faq.highlightedQuestion || faq.question;
+                const answerText = faq.highlightedAnswer || faq.answer;
+                const hasHighlight = faq.highlightedQuestion || faq.highlightedAnswer;
+                
                 faqsHTML += `
                     <div class="faq-item ${favoriteClass}" data-id="${faq.id}">
                         <div class="question-header">
-                            <div class="question-text">${faq.question}</div>
+                            <div class="question-text" ${hasHighlight ? 'data-has-highlight="true"' : ''}>
+                                ${hasHighlight ? '' : questionText}
+                            </div>
                             <div style="display: flex; align-items: center;">
                                 ${externalLinkButton}
                                 <button class="favorite-btn ${favoriteButtonClass}" 
@@ -2351,13 +2362,15 @@
                             </div>
                         </div>
                         <div class="answer">
-                            <div>${faq.answer}</div>
+                            <div ${hasHighlight && faq.highlightedAnswer ? 'data-has-highlight="true"' : ''}>
+                                ${hasHighlight && faq.highlightedAnswer ? '' : answerText}
+                            </div>
                         </div>
                     </div>
                 `;
             });
             
-            return faqsHTML;
+            return { html: faqsHTML, faqs: categoryFaqs };
         }
         
         // Renderizar Normativos e Jurisprudêncais - SEMPRE USAR CARDS COMO BASE
@@ -2599,11 +2612,14 @@
 
                     return {
                         ...faq,
-                        question: highlightedQuestion,
-                        answer: highlightedAnswer
+                        highlightedQuestion: highlightedQuestion,
+                        highlightedAnswer: highlightedAnswer
                     };
                 });
             }
+            
+            // Armazenar FAQs filtradas na cache para injeção posterior
+            filteredFaqsCache = filteredFAQs;
             
             renderFAQs(filteredFAQs);
         }
@@ -2674,7 +2690,32 @@
             }
         }
         
-        // Função para configurar links externos
+        // Injetar conteúdo destacado após renderização
+        function injectHighlightedContent() {
+            document.querySelectorAll('[data-has-highlight="true"]').forEach(element => {
+                const faqItem = element.closest('.faq-item');
+                if (!faqItem) return;
+                
+                const faqId = faqItem.getAttribute('data-id');
+                const faq = filteredFaqsCache && filteredFaqsCache.find(f => f.id === faqId);
+                
+                if (!faq) return;
+                
+                // Injetar question destacada
+                const questionDiv = faqItem.querySelector('.question-text[data-has-highlight="true"]');
+                if (questionDiv && faq.highlightedQuestion) {
+                    questionDiv.innerHTML = faq.highlightedQuestion;
+                }
+                
+                // Injetar answer destacada
+                const answerDiv = faqItem.querySelector('.answer > div[data-has-highlight="true"]');
+                if (answerDiv && faq.highlightedAnswer) {
+                    answerDiv.innerHTML = faq.highlightedAnswer;
+                }
+            });
+        }
+        
+        let filteredFaqsCache = []; // Cache para armazenar FAQs com destaque
         function configureExternalLinks() {
             setTimeout(() => {
                 const answerLinks = document.querySelectorAll('.answer a');
@@ -2869,6 +2910,7 @@
             Object.keys(faqsByCategory).forEach(categoryId => {
                 const categoryFaqs = faqsByCategory[categoryId];
                 const categoryName = categories.find(c => c.id === categoryId)?.name || 'Outros';
+                const renderResult = renderCategoryFAQs(categoryFaqs);
                 
                 faqsHTML += `
                     <div class="faq-subsection" style="margin-bottom: 2rem;">
@@ -2876,43 +2918,7 @@
                             ${categoryName} (${categoryFaqs.length})
                         </h3>
                         <div class="faq-list">
-                `;
-                
-                categoryFaqs.forEach(faq => {
-                    // Adicionar botão de link externo se houver URL
-                    let externalLinkButton = '';
-                    if (faq.url && faq.url.trim()) {
-                        externalLinkButton = `
-                            <button class="external-link-btn" 
-                                    onclick="window.open('${faq.url}', '_blank', 'noopener,noreferrer')"
-                                    title="Fonte da informação ou conceito">
-                                <i class="ri-external-link-line"></i>
-                            </button>
-                        `;
-                    }
-                    
-                    faqsHTML += `
-                        <div class="faq-item is-favorite" data-id="${faq.id}">
-                            <div class="question-header">
-                                <div class="question-text">${faq.question}</div>
-                                <div style="display: flex; align-items: center;">
-                                    ${externalLinkButton}
-                                    <button class="favorite-btn favorited" 
-                                            onclick="toggleFavorite('${faq.id}', '${escapeForAttribute(faq.question)}', '${faq.category}')"
-                                            title="Remover dos favoritos">
-                                        <i class="ri-star-fill"></i>
-                                    </button>
-                                    <i class="ri-arrow-down-s-line"></i>
-                                </div>
-                            </div>
-                            <div class="answer">
-                                <div>${faq.answer}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                faqsHTML += `
+                            ${renderResult.html}
                         </div>
                     </div>
                 `;
@@ -2921,6 +2927,9 @@
             faqsHTML += `</div>`;
             
             faqResults.innerHTML = faqsHTML;
+            
+            // Injetar conteúdo destacado
+            injectHighlightedContent();
             
             document.querySelectorAll('.question-header').forEach(header => {
                 header.addEventListener('click', function(e) {
@@ -2952,6 +2961,8 @@
         
         // Renderizar vista dedicada de categoria
         function renderCategoryDedicatedView(categoryId, categoryName, categoryFAQs) {
+            const renderResult = renderCategoryFAQs(categoryFAQs);
+            
             let dedicatedHTML = `
                 <div class="category-dedicated-view">
                     <div class="dedicated-header">
@@ -2970,7 +2981,7 @@
                     </div>
                     <div class="dedicated-content">
                         <div class="faq-list">
-                            ${renderCategoryFAQs(categoryFAQs)}
+                            ${renderResult.html}
                         </div>
                     </div>
                 </div>
@@ -2978,6 +2989,8 @@
             
             faqResults.innerHTML = dedicatedHTML;
             
+            // Injetar conteúdo destacado
+            injectHighlightedContent();
             setupFAQListeners();
             configureExternalLinks();
         }
@@ -3414,7 +3427,8 @@
                     
                     const faqListContainer = card.querySelector('.faq-list');
                     if (faqListContainer) {
-                        faqListContainer.innerHTML = renderCategoryFAQs(filteredFAQsForCategory);
+                        const renderResult = renderCategoryFAQs(filteredFAQsForCategory);
+                        faqListContainer.innerHTML = renderResult.html;
                     }
                     
                     if (searchTerm || showingFavorites) {
@@ -3431,6 +3445,8 @@
                 }
             });
             
+            // Injetar conteúdo destacado após renderizar
+            injectHighlightedContent();
             setupFAQListeners();
             configureExternalLinks();
             
