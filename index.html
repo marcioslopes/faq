@@ -2465,7 +2465,7 @@
             return matrix[str2.length][str1.length];
         }
         
-        // Função para expandir termos de busca com sinônimos
+        // Função para expandir termos de busca (removido sinônimos para busca mais precisa)
         function expandSearchTerms(searchTerm) {
             const normalizedTerm = normalizeText(searchTerm);
             const words = normalizedTerm.split(' ').filter(word => word.length > 2);
@@ -2473,25 +2473,13 @@
             
             words.forEach(word => {
                 expandedTerms.add(word);
-                
-                Object.keys(synonymMap).forEach(key => {
-                    if (word === key || synonymMap[key].includes(word)) {
-                        synonymMap[key].forEach(synonym => {
-                            expandedTerms.add(normalizeText(synonym));
-                        });
-                    }
-                    else if (word.length > 4 && levenshteinDistance(word, key) <= 1) {
-                        synonymMap[key].forEach(synonym => {
-                            expandedTerms.add(normalizeText(synonym));
-                        });
-                    }
-                });
+                // Removido: expansão com sinônimos para busca mais precisa
             });
             
             return Array.from(expandedTerms);
         }
         
-        // Função para calcular score de relevância
+        // Função para calcular score de relevância (busca mais precisa)
         function calculateRelevanceScore(faq, searchTerms, originalSearchTerm) {
             const questionText = normalizeText(faq.question);
             const answerText = normalizeText(faq.answer);
@@ -2503,48 +2491,39 @@
             const originalNormalized = normalizeText(originalSearchTerm);
             const originalWords = originalNormalized.split(' ').filter(w => w.length > 2);
             
-            let hasDirectMatch = false;
-            
-            originalWords.forEach(word => {
-                if (questionText.includes(word)) {
-                    score += 20;
-                    foundTerms.add(word);
-                    hasDirectMatch = true;
-                }
-                if (answerText.includes(word)) {
-                    score += 10;
-                    foundTerms.add(word);
-                    hasDirectMatch = true;
-                }
-            });
-            
-            if (!hasDirectMatch) {
-                searchTerms.forEach(term => {
-                    const isOriginalTerm = originalWords.includes(term);
-                    
-                    if (questionText.includes(term)) {
-                        score += isOriginalTerm ? 15 : 5;
-                        foundTerms.add(term);
-                    }
-                    
-                    if (answerText.includes(term)) {
-                        score += isOriginalTerm ? 8 : 3;
-                        foundTerms.add(term);
-                    }
-                });
-            }
-            
-            const matchedOriginalTerms = originalWords.filter(word => 
+            // Verificar se TODAS as palavras do termo de busca aparecem no texto
+            const allWordsPresent = originalWords.every(word => 
                 questionText.includes(word) || answerText.includes(word)
             );
             
-            const matchPercentage = matchedOriginalTerms.length / originalWords.length;
-            if (matchPercentage < 0.7) {
-                score = score * 0.3;
+            if (!allWordsPresent) {
+                return { score: 0, foundTerms: [] };
             }
             
-            if (matchPercentage >= 0.8) {
-                score += foundTerms.size * 2;
+            // Calcular score baseado na presença das palavras
+            originalWords.forEach(word => {
+                if (questionText.includes(word)) {
+                    score += 30; // Maior peso para perguntas
+                    foundTerms.add(word);
+                }
+                if (answerText.includes(word)) {
+                    score += 15; // Peso menor para respostas
+                    foundTerms.add(word);
+                }
+            });
+            
+            // Bônus se o termo completo aparecer
+            if (questionText.includes(originalNormalized) || answerText.includes(originalNormalized)) {
+                score += 50;
+            }
+            
+            // Penalizar se houver muitas palavras não relacionadas
+            const totalWords = fullText.split(' ').length;
+            const matchedWords = foundTerms.size;
+            const matchRatio = matchedWords / totalWords;
+            
+            if (matchRatio < 0.1) {
+                score = score * 0.5; // Reduzir score se poucas correspondências
             }
             
             return { score, foundTerms: Array.from(foundTerms) };
