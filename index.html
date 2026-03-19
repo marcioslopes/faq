@@ -2605,16 +2605,36 @@
             renderFAQs(filteredFAQs);
         }
         
-        // Destacar termos de pesquisa no texto (usa limites de palavra para evitar 'contratação' ao buscar 'ata')
+        // Destacar termos de pesquisa no texto (usa correspondência por palavra exata)
         function highlightSearchTermFlexible(text, term) {
-            if (!term || term.length < 2) return text;
+            if (!term) return text;
 
-            const normalizedTerm = normalizeText(term);
-            const normalizedSearch = normalizedTerm.replace(/\s+/g, ' ').trim();
-            const regex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'gi');
+            const normalizedSearch = normalizeText(term).replace(/\s+/g, ' ').trim();
+            if (!normalizedSearch) return text;
+
+            const termsToHighlight = new Set(
+                normalizedSearch
+                    .split(' ')
+                    .map(w => w.trim())
+                    .filter(w => w.length >= 2)
+            );
+
+            if (termsToHighlight.size === 0) return text;
+
+            const highlightText = (content) => {
+                const parts = content.split(/(\s+)/);
+                return parts
+                    .map(part => {
+                        const normalizedPart = normalizeText(part);
+                        if (termsToHighlight.has(normalizedPart)) {
+                            return `<span class="highlight">${part}</span>`;
+                        }
+                        return part;
+                    })
+                    .join('');
+            };
 
             const isHtml = /<[a-z][\s\S]*>/i.test(text);
-
             if (isHtml) {
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = text;
@@ -2622,16 +2642,11 @@
                 function highlightNodesText(node) {
                     if (node.nodeType === 3) {
                         const content = node.textContent;
-                        const normalizedContent = normalizeText(content);
-
-                        if (regex.test(normalizedContent)) {
-                            // Substitui o texto mantendo o casing original
-                            const newContent = content.replace(regex, match => `<span class="highlight">${match}</span>`);
-                            if (newContent !== content) {
-                                const span = document.createElement('span');
-                                span.innerHTML = newContent;
-                                node.parentNode.replaceChild(span, node);
-                            }
+                        const highlighted = highlightText(content);
+                        if (highlighted !== content) {
+                            const span = document.createElement('span');
+                            span.innerHTML = highlighted;
+                            node.parentNode.replaceChild(span, node);
                         }
                     } else if (node.nodeType === 1) {
                         if (node.className !== 'highlight') {
@@ -2643,7 +2658,7 @@
                 Array.from(tempDiv.childNodes).forEach(highlightNodesText);
                 return tempDiv.innerHTML;
             } else {
-                return text.replace(regex, match => `<span class="highlight">${match}</span>`);
+                return highlightText(text);
             }
         }
         
