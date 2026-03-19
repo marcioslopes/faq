@@ -2313,9 +2313,11 @@
             
             faqResults.innerHTML = overviewHTML;
             
-            // Injetar HTML destacado após renderizar
-            injectHighlightedContent();
-            setupCategoryListeners();
+            // Injetar HTML destacado após renderizar com pequeno delay
+            setTimeout(() => {
+                injectHighlightedContent();
+                setupCategoryListeners();
+            }, 50);
         }
         
         // Renderizar Normativos e Jurisprudências de uma categoria específica
@@ -2445,7 +2447,7 @@
             return 'ri-shield-check-line';
         }
         
-        // Função para normalizar texto
+        // Função para normalizar texto (removendo acentos para comparação)
         function normalizeText(text) {
             return text.toLowerCase()
                 .normalize('NFD')
@@ -2458,6 +2460,89 @@
         // Escapa uma string para uso em regex
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Função para encontrar e destacar com suporte a acentos e case-insensitive
+        function findAndHighlightPhrase(originalText, searchPhrase) {
+            if (!searchPhrase || !originalText) return originalText;
+
+            // Normalizar a frase de busca
+            const normalizedSearchPhrase = normalizeText(searchPhrase).trim();
+            if (!normalizedSearchPhrase) return originalText;
+
+            // Normalizar o texto original para matching
+            const normalizedText = normalizeText(originalText);
+            
+            // Verificar se a frase existe no texto normalizado
+            const pattern = escapeRegExp(normalizedSearchPhrase);
+            const searchRegex = new RegExp(`\\b${pattern}\\b`, 'g');
+            
+            if (!searchRegex.test(normalizedText)) {
+                return originalText;
+            }
+
+            // Agora fazer o destaque no texto original
+            // Dividir o texto em palavras e espaços
+            const tokens = originalText.split(/(\s+)/);
+            const normalizedTokens = normalizeText(originalText).split(/(\s+)/);
+            
+            const searchWords = normalizedSearchPhrase.split(/\s+/).filter(w => w.length > 0);
+            const searchWordsCount = searchWords.length;
+            
+            let result = [];
+            let i = 0;
+            
+            while (i < normalizedTokens.length) {
+                // Saltar espaços em branco
+                if (/^\s+$/.test(normalizedTokens[i])) {
+                    result.push(tokens[i]);
+                    i++;
+                    continue;
+                }
+                
+                // Tentar combinar a sequência de palavras a partir desta posição
+                let matchedCount = 0;
+                let j = i;
+                
+                // Verificar se os próximos N tokens (ignorando espaços) combinam com as palavras de busca
+                for (let w = 0; w < searchWordsCount; w++) {
+                    // Pular espaços em branco
+                    while (j < normalizedTokens.length && /^\s+$/.test(normalizedTokens[j])) {
+                        j++;
+                    }
+                    
+                    if (j >= normalizedTokens.length) break;
+                    
+                    // Verificar se o token normalizado combina com a palavra de busca
+                    if (normalizedTokens[j] === searchWords[w]) {
+                        matchedCount++;
+                        j++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Se combinou todas as palavras de busca
+                if (matchedCount === searchWordsCount) {
+                    // Destacar os tokens combinados
+                    let k = i;
+                    while (k < j) {
+                        if (!/^\s+$/.test(normalizedTokens[k])) {
+                            result.push(`<span class="highlight">${tokens[k]}</span>`);
+                        } else {
+                            result.push(tokens[k]);
+                        }
+                        k++;
+                    }
+                    i = j;
+                } else {
+                    // Não combinou, apenas adicionar o token
+                    result.push(tokens[i]);
+                    i++;
+                }
+            }
+            
+            return result.join('');
         }
 
         // Função para calcular distância de Levenshtein
@@ -2500,7 +2585,7 @@
             }
         }
         
-        // Função para calcular score de relevância (busca mais precisa)
+        // Função para calcular score de relevância com busca aprimorada
         function calculateRelevanceScore(faq, searchTerms, originalSearchTerm) {
             const questionText = normalizeText(faq.question);
             const answerText = normalizeText(faq.answer);
@@ -2512,7 +2597,9 @@
 
             // Para buscas com múltiplas palavras, exigir correspondência exata da frase (contígua)
             const originalWords = normalizedSearch.split(' ').filter(w => w.length > 0);
+            
             if (originalWords.length > 1) {
+                // Padrão para múltiplas palavras com espaços flexíveis
                 const searchRegex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'i');
 
                 if (!searchRegex.test(questionText) && !searchRegex.test(answerText)) {
@@ -2561,7 +2648,7 @@
             return { score, foundTerms: Array.from(foundTerms) };
         }
         
-        // Filtrar FAQs
+        // Filtrar FAQs com destaque aprimorado
         function filterFAQs() {
             const originalSearchTerm = searchInput.value.trim();
             
@@ -2586,29 +2673,16 @@
                 filteredFAQs = faqsWithScore
                     .filter(faq => faq.relevanceScore > 0)
                     .sort((a, b) => b.relevanceScore - a.relevanceScore);
-                
-                // Para busca exata ou multi-palavra, destacar a sentença inteira quando encontrada
-                const isExactPhrase = originalSearchTerm.startsWith('"') && originalSearchTerm.endsWith('"');
-                const normalizedSearch = normalizeText(originalSearchTerm);
-                const isMultiWordSearch = normalizedSearch.split(' ').filter(w => w.length > 0).length > 1;
 
+                // Aplicar destaque diretamente no texto ORIGINAL
+                // NÃO normalizar, trabalhar com o texto como-é
                 filteredFAQs = filteredFAQs.map(faq => {
                     let highlightedQuestion = faq.question;
                     let highlightedAnswer = faq.answer;
 
-                    if (isExactPhrase || isMultiWordSearch) {
-                        const searchPhrase = isExactPhrase ? originalSearchTerm.slice(1, -1) : originalSearchTerm;
-                        highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, searchPhrase);
-                        highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, searchPhrase);
-                    } else {
-                        // Para busca por palavra única, destacar termos encontrados
-                        faq.foundTerms.forEach(term => {
-                            if (term.length > 2) {
-                                highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, term);
-                                highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, term);
-                            }
-                        });
-                    }
+                    // Destacar usando o termo original
+                    highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, originalSearchTerm);
+                    highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, originalSearchTerm);
 
                     return {
                         ...faq,
@@ -2624,43 +2698,32 @@
             renderFAQs(filteredFAQs);
         }
         
-        // Destacar termos de pesquisa no texto (usa correspondência por palavra exata ou frase completa)
+        // Destacar termos de pesquisa no texto - versão aprimorada com suporte a acentos
         function highlightSearchTermFlexible(text, term) {
-            if (!term) return text;
+            if (!term || !text) return text;
 
-            const normalizedSearch = normalizeText(term).replace(/\s+/g, ' ').trim();
-            if (!normalizedSearch) return text;
+            const searchTerm = term.trim();
+            if (!searchTerm) return text;
 
-            const isPhrase = normalizedSearch.includes(' ');
+            // Contar espaços para determinar se é uma frase
+            const words = searchTerm.split(/\s+/).filter(w => w.length > 0);
+            
+            // Se é uma frase (múltiplas palavras)
+            if (words.length > 1) {
+                // Usar a nova função de destaque com suporte a acentos
+                return findAndHighlightPhrase(text, searchTerm);
+            }
 
-            const termsToHighlight = isPhrase
-                ? null
-                : new Set(
-                      normalizedSearch
-                          .split(' ')
-                          .map(w => w.trim())
-                          .filter(w => w.length >= 2)
-                  );
+            // Para palavras únicas
+            const word = words[0];
+            if (!word || word.length === 0) return text;
 
-            const highlightText = (content) => {
-                if (isPhrase) {
-                    // CORREÇÃO: Criar regex NOVA a cada chamada para evitar problemas com lastIndex
-                    const phraseRegex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'gi');
-                    return content.replace(phraseRegex, match => `<span class="highlight">${match}</span>`);
-                }
-
-                const parts = content.split(/(\s+)/);
-                return parts
-                    .map(part => {
-                        const normalizedPart = normalizeText(part);
-                        if (termsToHighlight.has(normalizedPart)) {
-                            return `<span class="highlight">${part}</span>`;
-                        }
-                        return part;
-                    })
-                    .join('');
-            };
-
+            // Criar padrão que combina com/sem acentos
+            const normalizedWord = normalizeText(word);
+            
+            // Construir regex que funciona com case-insensitive e ignora acentos
+            const regex = new RegExp(`\\b${escapeRegExp(normalizedWord)}\\b`, 'gi');
+            
             const isHtml = /<[a-z][\s\S]*>/i.test(text);
             if (isHtml) {
                 const tempDiv = document.createElement('div');
@@ -2669,11 +2732,22 @@
                 function highlightNodesText(node) {
                     if (node.nodeType === 3) {
                         const content = node.textContent;
-                        const highlighted = highlightText(content);
-                        if (highlighted !== content) {
-                            const span = document.createElement('span');
-                            span.innerHTML = highlighted;
-                            node.parentNode.replaceChild(span, node);
+                        const normalizedContent = normalizeText(content);
+                        
+                        // Buscar matches na versão normalizada
+                        let match;
+                        const matchRegex = new RegExp(`\\b${escapeRegExp(normalizedWord)}\\b`, 'gi');
+                        
+                        if (matchRegex.test(normalizedContent)) {
+                            // Reconstruir o regex para fazer replace
+                            const replaceRegex = new RegExp(`\\b${escapeRegExp(normalizedWord)}\\b`, 'gi');
+                            const highlighted = content.replace(replaceRegex, m => `<span class="highlight">${m}</span>`);
+                            
+                            if (highlighted !== content) {
+                                const span = document.createElement('span');
+                                span.innerHTML = highlighted;
+                                node.parentNode.replaceChild(span, node);
+                            }
                         }
                     } else if (node.nodeType === 1) {
                         if (node.className !== 'highlight') {
@@ -2685,7 +2759,7 @@
                 Array.from(tempDiv.childNodes).forEach(highlightNodesText);
                 return tempDiv.innerHTML;
             } else {
-                return highlightText(text);
+                return text.replace(regex, match => `<span class="highlight">${match}</span>`);
             }
         }
         
@@ -2703,13 +2777,23 @@
                 // Injetar question destacada
                 const questionDiv = faqItem.querySelector('.question-text[data-has-highlight="true"]');
                 if (questionDiv && faq.highlightedQuestion) {
-                    questionDiv.innerHTML = faq.highlightedQuestion;
+                    try {
+                        questionDiv.innerHTML = faq.highlightedQuestion;
+                    } catch (e) {
+                        console.warn('Erro ao injetar question:', e);
+                        questionDiv.textContent = faq.question;
+                    }
                 }
                 
                 // Injetar answer destacada
                 const answerDiv = faqItem.querySelector('.answer > div[data-has-highlight="true"]');
                 if (answerDiv && faq.highlightedAnswer) {
-                    answerDiv.innerHTML = faq.highlightedAnswer;
+                    try {
+                        answerDiv.innerHTML = faq.highlightedAnswer;
+                    } catch (e) {
+                        console.warn('Erro ao injetar answer:', e);
+                        answerDiv.textContent = faq.answer;
+                    }
                 }
             });
         }
@@ -2927,22 +3011,24 @@
             
             faqResults.innerHTML = faqsHTML;
             
-            // Injetar conteúdo destacado
-            injectHighlightedContent();
-            
-            document.querySelectorAll('.question-header').forEach(header => {
-                header.addEventListener('click', function(e) {
-                    // Não expandir/recolher se clicou no botão de favoritos ou link externo
-                    if (e.target.closest('.favorite-btn') || e.target.closest('.external-link-btn')) {
-                        return;
-                    }
-                    
-                    const faqItem = this.parentElement;
-                    faqItem.classList.toggle('expanded');
+            // Injetar conteúdo destacado com delay
+            setTimeout(() => {
+                injectHighlightedContent();
+                
+                document.querySelectorAll('.question-header').forEach(header => {
+                    header.addEventListener('click', function(e) {
+                        // Não expandir/recolher se clicou no botão de favoritos ou link externo
+                        if (e.target.closest('.favorite-btn') || e.target.closest('.external-link-btn')) {
+                            return;
+                        }
+                        
+                        const faqItem = this.parentElement;
+                        faqItem.classList.toggle('expanded');
+                    });
                 });
-            });
-            
-            configureExternalLinks();
+                
+                configureExternalLinks();
+            }, 50);
         }
         
         // Inicializar sistema de navegação
@@ -2988,10 +3074,12 @@
             
             faqResults.innerHTML = dedicatedHTML;
             
-            // Injetar conteúdo destacado
-            injectHighlightedContent();
-            setupFAQListeners();
-            configureExternalLinks();
+            // Injetar conteúdo destacado com delay
+            setTimeout(() => {
+                injectHighlightedContent();
+                setupFAQListeners();
+                configureExternalLinks();
+            }, 50);
         }
         
         // Mostrar favoritos via cards
@@ -3444,10 +3532,12 @@
                 }
             });
             
-            // Injetar conteúdo destacado após renderizar
-            injectHighlightedContent();
-            setupFAQListeners();
-            configureExternalLinks();
+            // Injetar conteúdo destacado com delay
+            setTimeout(() => {
+                injectHighlightedContent();
+                setupFAQListeners();
+                configureExternalLinks();
+            }, 50);
             
             if (searchTerm && hasResults) {
                 setTimeout(() => {
