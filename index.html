@@ -2439,6 +2439,11 @@
                 .replace(/\s+/g, ' ')
                 .trim();
         }
+
+        // Escapa uma string para uso em regex
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
         
         // Função para calcular distância de Levenshtein
         function levenshteinDistance(str1, str2) {
@@ -2484,49 +2489,60 @@
         function calculateRelevanceScore(faq, searchTerms, originalSearchTerm) {
             const questionText = normalizeText(faq.question);
             const answerText = normalizeText(faq.answer);
-            const fullText = questionText + ' ' + answerText;
-            
-            let score = 0;
-            const foundTerms = new Set();
-            
-            const originalNormalized = normalizeText(originalSearchTerm);
-            const originalWords = originalNormalized.split(' ').filter(w => w.length > 2);
-            
-            // Verificar se TODAS as palavras do termo de busca aparecem no texto
-            const allWordsPresent = originalWords.every(word => 
-                questionText.includes(word) || answerText.includes(word)
-            );
-            
-            if (!allWordsPresent) {
+
+            const trimmedOriginal = originalSearchTerm.trim();
+            const isExactPhrase = trimmedOriginal.startsWith('"') && trimmedOriginal.endsWith('"');
+            const normalizedOriginal = normalizeText(isExactPhrase ? trimmedOriginal.slice(1, -1) : trimmedOriginal);
+            const normalizedSearch = normalizedOriginal.replace(/\s+/g, ' ').trim();
+
+            // Criar regex que respeite limites de palavra (evita corresponder parte de outra palavra)
+            const searchRegex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'i');
+
+            // Para buscas com múltiplas palavras, exigir correspondência exata da frase (contígua)
+            const originalWords = normalizedSearch.split(' ').filter(w => w.length > 0);
+            if (originalWords.length > 1) {
+                if (!searchRegex.test(questionText) && !searchRegex.test(answerText)) {
+                    return { score: 0, foundTerms: [] };
+                }
+
+                let score = 0;
+                const foundTerms = new Set();
+
+                if (searchRegex.test(questionText)) {
+                    score += 40;
+                    foundTerms.add(normalizedSearch);
+                }
+                if (searchRegex.test(answerText)) {
+                    score += 20;
+                    foundTerms.add(normalizedSearch);
+                }
+
+                // bônus pela frase completa
+                score += 30;
+
+                return { score, foundTerms: Array.from(foundTerms) };
+            }
+
+            // Para buscas de uma palavra, usar correspondência por palavra inteira
+            if (originalWords.length === 0) {
                 return { score: 0, foundTerms: [] };
             }
-            
-            // Calcular score baseado na presença das palavras
-            originalWords.forEach(word => {
-                if (questionText.includes(word)) {
-                    score += 30; // Maior peso para perguntas
-                    foundTerms.add(word);
-                }
-                if (answerText.includes(word)) {
-                    score += 15; // Peso menor para respostas
-                    foundTerms.add(word);
-                }
-            });
-            
-            // Bônus se o termo completo aparecer
-            if (questionText.includes(originalNormalized) || answerText.includes(originalNormalized)) {
-                score += 50;
+
+            const word = originalWords[0];
+            const wordRegex = new RegExp(`\\b${escapeRegExp(word)}\\b`, 'i');
+
+            let score = 0;
+            const foundTerms = new Set();
+
+            if (wordRegex.test(questionText)) {
+                score += 40;
+                foundTerms.add(word);
             }
-            
-            // Penalizar se houver muitas palavras não relacionadas
-            const totalWords = fullText.split(' ').length;
-            const matchedWords = foundTerms.size;
-            const matchRatio = matchedWords / totalWords;
-            
-            if (matchRatio < 0.1) {
-                score = score * 0.5; // Reduzir score se poucas correspondências
+            if (wordRegex.test(answerText)) {
+                score += 20;
+                foundTerms.add(word);
             }
-            
+
             return { score, foundTerms: Array.from(foundTerms) };
         }
         
@@ -2589,36 +2605,28 @@
             renderFAQs(filteredFAQs);
         }
         
-        // Destacar termos de pesquisa no texto
+        // Destacar termos de pesquisa no texto (usa limites de palavra para evitar 'contratação' ao buscar 'ata')
         function highlightSearchTermFlexible(text, term) {
             if (!term || term.length < 2) return text;
-            
+
             const normalizedTerm = normalizeText(term);
+            const normalizedSearch = normalizedTerm.replace(/\s+/g, ' ').trim();
+            const regex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'gi');
+
             const isHtml = /<[a-z][\s\S]*>/i.test(text);
-            
+
             if (isHtml) {
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = text;
-                
+
                 function highlightNodesText(node) {
                     if (node.nodeType === 3) {
                         const content = node.textContent;
                         const normalizedContent = normalizeText(content);
-                        
-                        if (normalizedContent.includes(normalizedTerm)) {
-                            // Para frases exatas, destacar apenas ocorrências completas
-                            const words = content.split(/(\s+)/);
-                            let newContent = '';
-                            
-                            words.forEach(word => {
-                                const normalizedWord = normalizeText(word);
-                                if (normalizedWord.includes(normalizedTerm) && normalizedWord.length >= term.length) {
-                                    newContent += `<span class="highlight">${word}</span>`;
-                                } else {
-                                    newContent += word;
-                                }
-                            });
-                            
+
+                        if (regex.test(normalizedContent)) {
+                            // Substitui o texto mantendo o casing original
+                            const newContent = content.replace(regex, match => `<span class="highlight">${match}</span>`);
                             if (newContent !== content) {
                                 const span = document.createElement('span');
                                 span.innerHTML = newContent;
@@ -2631,18 +2639,11 @@
                         }
                     }
                 }
-                
+
                 Array.from(tempDiv.childNodes).forEach(highlightNodesText);
                 return tempDiv.innerHTML;
             } else {
-                const words = text.split(/(\s+)/);
-                return words.map(word => {
-                    const normalizedWord = normalizeText(word);
-                    if (normalizedWord.includes(normalizedTerm) && normalizedWord.length >= term.length) {
-                        return `<span class="highlight">${word}</span>`;
-                    }
-                    return word;
-                }).join('');
+                return text.replace(regex, match => `<span class="highlight">${match}</span>`);
             }
         }
         
