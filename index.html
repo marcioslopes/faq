@@ -2632,9 +2632,6 @@
             if (!normalizedSearch) return text;
 
             const isPhrase = normalizedSearch.includes(' ');
-            const phraseRegex = isPhrase
-                ? new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'gi')
-                : null;
 
             const termsToHighlight = isPhrase
                 ? null
@@ -2647,6 +2644,8 @@
 
             const highlightText = (content) => {
                 if (isPhrase) {
+                    // CORREÇÃO: Criar regex NOVA a cada chamada para evitar problemas com lastIndex
+                    const phraseRegex = new RegExp(`\\b${escapeRegExp(normalizedSearch)}\\b`, 'gi');
                     return content.replace(phraseRegex, match => `<span class="highlight">${match}</span>`);
                 }
 
