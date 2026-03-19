@@ -2465,18 +2465,19 @@
             return matrix[str2.length][str1.length];
         }
         
-        // Função para expandir termos de busca (removido sinônimos para busca mais precisa)
+        // Função para expandir termos de busca (busca precisa sem sinônimos)
         function expandSearchTerms(searchTerm) {
-            const normalizedTerm = normalizeText(searchTerm);
-            const words = normalizedTerm.split(' ').filter(word => word.length > 2);
-            const expandedTerms = new Set();
+            const trimmedTerm = searchTerm.trim();
+            const isExactPhrase = trimmedTerm.startsWith('"') && trimmedTerm.endsWith('"');
             
-            words.forEach(word => {
-                expandedTerms.add(word);
-                // Removido: expansão com sinônimos para busca mais precisa
-            });
-            
-            return Array.from(expandedTerms);
+            if (isExactPhrase) {
+                // Retornar a frase exata sem aspas
+                return [normalizeText(trimmedTerm.slice(1, -1))];
+            } else {
+                // Retornar palavras individuais
+                const normalizedTerm = normalizeText(trimmedTerm);
+                return normalizedTerm.split(' ').filter(word => word.length > 2);
+            }
         }
         
         // Função para calcular score de relevância (busca mais precisa)
@@ -2555,21 +2556,27 @@
                     .filter(faq => faq.relevanceScore > 0)
                     .sort((a, b) => b.relevanceScore - a.relevanceScore);
                 
+                // Para busca exata, não destacar termos individuais
+                const isExactPhrase = originalSearchTerm.startsWith('"') && originalSearchTerm.endsWith('"');
+                
                 filteredFAQs = filteredFAQs.map(faq => {
                     let highlightedQuestion = faq.question;
                     let highlightedAnswer = faq.answer;
                     
-                    const allTermsToHighlight = [
-                        ...normalizeText(originalSearchTerm).split(' ').filter(w => w.length > 2),
-                        ...faq.foundTerms
-                    ];
-                    
-                    allTermsToHighlight.forEach(term => {
-                        if (term.length > 2) {
-                            highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, term);
-                            highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, term);
-                        }
-                    });
+                    if (isExactPhrase) {
+                        // Para frases exatas, destacar apenas a frase completa
+                        const searchPhrase = originalSearchTerm.slice(1, -1);
+                        highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, searchPhrase);
+                        highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, searchPhrase);
+                    } else {
+                        // Para busca por palavras, destacar termos encontrados
+                        faq.foundTerms.forEach(term => {
+                            if (term.length > 2) {
+                                highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, term);
+                                highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, term);
+                            }
+                        });
+                    }
                     
                     return {
                         ...faq,
