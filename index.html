@@ -2591,7 +2591,7 @@
         
         // Destacar termos de pesquisa no texto
         function highlightSearchTermFlexible(text, term) {
-            if (!term || term.length < 3) return text;
+            if (!term || term.length < 2) return text;
             
             const normalizedTerm = normalizeText(term);
             const isHtml = /<[a-z][\s\S]*>/i.test(text);
@@ -2606,12 +2606,13 @@
                         const normalizedContent = normalizeText(content);
                         
                         if (normalizedContent.includes(normalizedTerm)) {
+                            // Para frases exatas, destacar apenas ocorrências completas
                             const words = content.split(/(\s+)/);
                             let newContent = '';
                             
                             words.forEach(word => {
                                 const normalizedWord = normalizeText(word);
-                                if (normalizedWord.includes(normalizedTerm) && normalizedWord.length > 2) {
+                                if (normalizedWord.includes(normalizedTerm) && normalizedWord.length >= term.length) {
                                     newContent += `<span class="highlight">${word}</span>`;
                                 } else {
                                     newContent += word;
@@ -2637,7 +2638,7 @@
                 const words = text.split(/(\s+)/);
                 return words.map(word => {
                     const normalizedWord = normalizeText(word);
-                    if (normalizedWord.includes(normalizedTerm) && normalizedWord.length > 2) {
+                    if (normalizedWord.includes(normalizedTerm) && normalizedWord.length >= term.length) {
                         return `<span class="highlight">${word}</span>`;
                     }
                     return word;
