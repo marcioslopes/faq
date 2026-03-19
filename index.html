@@ -2574,20 +2574,21 @@
                     .filter(faq => faq.relevanceScore > 0)
                     .sort((a, b) => b.relevanceScore - a.relevanceScore);
                 
-                // Para busca exata, não destacar termos individuais
+                // Para busca exata ou multi-palavra, destacar a sentença inteira quando encontrada
                 const isExactPhrase = originalSearchTerm.startsWith('"') && originalSearchTerm.endsWith('"');
-                
+                const normalizedSearch = normalizeText(originalSearchTerm);
+                const isMultiWordSearch = normalizedSearch.split(' ').filter(w => w.length > 0).length > 1;
+
                 filteredFAQs = filteredFAQs.map(faq => {
                     let highlightedQuestion = faq.question;
                     let highlightedAnswer = faq.answer;
-                    
-                    if (isExactPhrase) {
-                        // Para frases exatas, destacar apenas a frase completa
-                        const searchPhrase = originalSearchTerm.slice(1, -1);
+
+                    if (isExactPhrase || isMultiWordSearch) {
+                        const searchPhrase = isExactPhrase ? originalSearchTerm.slice(1, -1) : originalSearchTerm;
                         highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, searchPhrase);
                         highlightedAnswer = highlightSearchTermFlexible(highlightedAnswer, searchPhrase);
                     } else {
-                        // Para busca por palavras, destacar termos encontrados
+                        // Para busca por palavra única, destacar termos encontrados
                         faq.foundTerms.forEach(term => {
                             if (term.length > 2) {
                                 highlightedQuestion = highlightSearchTermFlexible(highlightedQuestion, term);
@@ -2595,7 +2596,7 @@
                             }
                         });
                     }
-                    
+
                     return {
                         ...faq,
                         question: highlightedQuestion,
